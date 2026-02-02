@@ -8,6 +8,7 @@ public class WebBasedGarageManagementSystemApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebBasedGarageManagementSystemApplication.class, args);
+		System.out.println("Spring Application Has Been Started...");
 	}
 
 }

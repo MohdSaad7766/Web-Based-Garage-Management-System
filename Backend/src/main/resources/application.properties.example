@@ -1,0 +1,21 @@
+spring.application.name=Web-Based-Garage-Management-System
+
+server.port = 8080
+server.servlet.context-path=/garage
+
+#Database Config
+spring.datasource.url=db
+spring.datasource.username=username
+spring.datasource.password=password
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+
+#Mail Config
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=gmail
+spring.mail.password=google app password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
