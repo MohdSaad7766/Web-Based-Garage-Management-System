@@ -11,28 +11,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerService {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
-    @Autowired
-    CustomerService(CustomerRepository customerRepository){
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
-
-
-    public Customer findOrCreate(CustomerRequestDto dto){
-        return customerRepository.findByEmail(dto.getEmail()).orElse(fromDto(dto));
+    public Customer findOrCreate(CustomerRequestDto dto) {
+        return customerRepository
+                .findByEmail(dto.getEmail())
+                .orElseGet(() -> customerRepository.save(fromDto(dto)));
     }
 
-    public Customer fromDto(CustomerRequestDto dto){
+    private Customer fromDto(CustomerRequestDto dto) {
         Customer customer = new Customer();
-
         customer.setName(dto.getName());
         customer.setEmail(dto.getEmail());
         customer.setMobileNumber(dto.getMobileNumber());
         customer.setAddress(dto.getAddress());
-
         return customer;
     }
-
 }
+

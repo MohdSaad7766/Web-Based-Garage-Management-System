@@ -44,11 +44,14 @@ public class AppointmentController {
 
 
     @PatchMapping("/update-status/{id}")
-    public ResponseEntity<GeneralMessageResponse> updateAppointmentStatus(@PathVariable UUID id, @RequestParam AppointmentStatus status){
-        appointmentService.updateAppointmentStatus(id, status);
+    public ResponseEntity<GeneralMessageResponse> updateAppointmentStatus(@PathVariable UUID id, @RequestParam AppointmentStatus status, @RequestParam boolean sentMail){
+        appointmentService.updateAppointmentStatus(id, status, sentMail);
         return ResponseEntity.ok(new GeneralMessageResponse(true,"Appointment status has been updated."));
     }
 
+    public void updateAppointment(){
+
+    }
     public void deleteAppointment(){
 
     }

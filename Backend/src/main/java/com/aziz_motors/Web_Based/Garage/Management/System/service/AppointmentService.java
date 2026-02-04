@@ -33,6 +33,7 @@ public class AppointmentService {
     private CustomerService customerService;
     private VehicleService vehicleService;
     private CustomerRepository customerRepository;
+    private MailService mailService;
     private final int PAGE_SIZE = 10;
 
 
@@ -40,41 +41,66 @@ public class AppointmentService {
     AppointmentService(CustomerService customerService,
                        VehicleService vehicleService,
                        CustomerRepository customerRepository,
-                       AppointmentRepository appointmentRepository){
+                       AppointmentRepository appointmentRepository,
+                       MailService mailService){
 
         this.customerService = customerService;
         this.vehicleService = vehicleService;
         this.customerRepository = customerRepository;
         this.appointmentRepository = appointmentRepository;
+        this.mailService = mailService;
     }
 
     @Transactional
-    public void addAppointment(AppointmentRequestDto dto){
+    public void addAppointment(AppointmentRequestDto dto) {
 
+        // 1️⃣ Get or create Customer (persisted)
         Customer customer = customerService.findOrCreate(dto.getCustomer());
+
+        // 2️⃣ Get or create Vehicle (persisted)
         Vehicle vehicle = vehicleService.findOrCreate(dto.getVehicle());
 
+        // 3️⃣ Ownership validation
         if (vehicle.getCustomer() != null && !vehicle.getCustomer().equals(customer)) {
-            throw new VehicleAlreadyAssignedException();
+            throw new VehicleAlreadyAssignedException(
+                    "Vehicle already belongs to another customer"
+            );
         }
 
+        // 4️⃣ Attach vehicle to customer
         customer.addVehicle(vehicle);
 
-        customer = customerRepository.save(customer);
+        // 5️⃣ Prevent duplicate appointment
+        boolean exists = appointmentRepository
+                .existsByCustomerAndVehicleAndDateTimeAndServiceType(
+                        customer,
+                        vehicle,
+                        dto.getDateTime(),
+                        dto.getServiceType()
+                );
 
-        if(appointmentRepository.existsByCustomerAndVehicleAndDateTimeAndServiceType(
-                customer, vehicle, dto.getDateTime(), dto.getServiceType())
-        ){
-            throw new DuplicateAppointmentException();
+        if (exists) {
+            throw new DuplicateAppointmentException(
+                    "Appointment already exists for this vehicle and time"
+            );
         }
 
-        Appointment appointment = fromDto(dto);
+        // 6️⃣ Create appointment
+        Appointment appointment = new Appointment();
+        appointment.setDateTime(dto.getDateTime());
+        appointment.setServiceType(dto.getServiceType());
+        appointment.setStatus(AppointmentStatus.PENDING);
         appointment.setVehicle(vehicle);
+
+        // 7️⃣ Attach appointment to customer
         customer.addAppointment(appointment);
 
+        // 8️⃣ Save ONLY customer (cascade saves appointment)
         customerRepository.save(customer);
 
+        mailService.sendAppointmentMail(toDto(appointment), AppointmentStatus.PENDING);
     }
+
 
     public AppointmentResponseDto getAppointmentById(UUID id){
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(()->
@@ -104,16 +130,18 @@ public class AppointmentService {
         );
     }
 
-    public void updateAppointmentStatus(UUID id, AppointmentStatus status){
+    public void updateAppointmentStatus(UUID id, AppointmentStatus status, boolean sentMail){
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(()->
                         new IdNotFoundException("Appointment with id-"+id+" not found...")
                 );
         appointment.setStatus(status);
 
-        appointmentRepository.save(appointment);
+        appointment = appointmentRepository.save(appointment);
 
-//        send mail if required
+        if(sentMail){
+            mailService.sendAppointmentMail(toDto(appointment), status);
+        }
     }
 
     private AppointmentResponseDto toDto(Appointment appointment){

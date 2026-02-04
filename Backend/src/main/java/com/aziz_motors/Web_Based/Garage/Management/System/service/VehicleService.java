@@ -8,27 +8,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleService {
 
-    private VehicleRepository vehicleRepository;
+    private final VehicleRepository vehicleRepository;
 
-    VehicleService(VehicleRepository vehicleRepository){
+    public VehicleService(VehicleRepository vehicleRepository) {
         this.vehicleRepository = vehicleRepository;
     }
 
-    public Vehicle findOrCreate(VehicleRequestDto dto){
-        return vehicleRepository.findByRegistrationNumber(dto.getRegistrationNumber())
-                .orElse(fromDto(dto));
+    public Vehicle findOrCreate(VehicleRequestDto dto) {
+        return vehicleRepository
+                .findByRegistrationNumber(dto.getRegistrationNumber())
+                .orElseGet(() -> vehicleRepository.save(fromDto(dto)));
     }
 
-    public Vehicle fromDto(VehicleRequestDto dto){
+    private Vehicle fromDto(VehicleRequestDto dto) {
         Vehicle vehicle = new Vehicle();
-
         vehicle.setManufacturerName(dto.getManufacturerName());
         vehicle.setModelName(dto.getModelName());
         vehicle.setModelYear(dto.getModelYear());
         vehicle.setFuelType(dto.getFuelType());
         vehicle.setRegistrationNumber(dto.getRegistrationNumber());
-
         return vehicle;
     }
-
 }
+
