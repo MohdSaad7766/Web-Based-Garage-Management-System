@@ -1,8 +1,11 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.entity.Appointment;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.AppointmentStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.AppointmentRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.AppointmentResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +37,14 @@ public class AppointmentController {
     }
 
 
-//    public void getAppointments(){
-//
-//    }
+    @GetMapping("/get-all/{pageNo}")
+    public ResponseEntity<PaginatedResponse<AppointmentResponseDto>> getAppointments(@PathVariable int pageNo){
+        return ResponseEntity.ok(appointmentService.getAppointments(pageNo));
+    }
 
-    public void updateAppointment(){
+
+    @PatchMapping("/update-status/{id}")
+    public void updateAppointmentStatus(@PathVariable UUID id, @RequestParam AppointmentStatus status){
 
     }
 
