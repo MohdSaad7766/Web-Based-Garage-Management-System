@@ -3,6 +3,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.service;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Appointment;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Customer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.AppointmentStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.DuplicateAppointmentException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.IdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.VehicleAlreadyAssignedException;
@@ -103,6 +104,18 @@ public class AppointmentService {
         );
     }
 
+    public void updateAppointmentStatus(UUID id, AppointmentStatus status){
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(()->
+                        new IdNotFoundException("Appointment with id-"+id+" not found...")
+                );
+        appointment.setStatus(status);
+
+        appointmentRepository.save(appointment);
+
+//        send mail if required
+    }
+
     private AppointmentResponseDto toDto(Appointment appointment){
         Customer customer = appointment.getCustomer();
         Vehicle vehicle = appointment.getVehicle();
@@ -112,6 +125,7 @@ public class AppointmentService {
         customerDto.setEmail(customer.getEmail());
         customerDto.setMobileNumber(customer.getMobileNumber());
         customerDto.setAddress(customer.getAddress());
+        customerDto.setCustomerId(customer.getId());
 
         VehicleResponseDto vehicleDto = new VehicleResponseDto();
         vehicleDto.setManufacturerName(vehicle.getManufacturerName());
@@ -119,7 +133,7 @@ public class AppointmentService {
         vehicleDto.setModelYear(vehicle.getModelYear());
         vehicleDto.setRegistrationNumber(vehicle.getRegistrationNumber());
         vehicleDto.setFuelType(vehicle.getFuelType());
-
+        vehicleDto.setVehicleId(vehicle.getId());
 
 
         AppointmentResponseDto appointmentDto = new AppointmentResponseDto();
@@ -132,6 +146,7 @@ public class AppointmentService {
 
         appointmentDto.setCustomer(customerDto);
         appointmentDto.setVehicle(vehicleDto);
+        appointmentDto.setAppointmentId(appointment.getId());
 
         return appointmentDto;
     }
