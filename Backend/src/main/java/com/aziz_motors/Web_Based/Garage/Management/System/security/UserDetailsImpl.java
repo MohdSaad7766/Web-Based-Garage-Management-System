@@ -32,7 +32,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return admin.isEmailVerified();
+        return UserDetails.super.isEnabled();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.entity;
 
-import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.RegistrationRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 
 @Entity
-public class Admin {
+public class Mechanic {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -28,24 +28,17 @@ public class Admin {
     private String email;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false, unique = true)
     private String mobileNumber;
+
+    @Column(nullable = false)
+    private double salary;
+
+    @Column(nullable = false)
+    private String address;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    public static Admin fromDTO(RegistrationRequestDto dto){
-        Admin admin = new Admin();
-        admin.setName(dto.getName());
-        admin.setEmail(dto.getEmail());
-        admin.setPassword(dto.getPassword());
-        admin.setMobileNumber(dto.getMobileNumber());
-
-        return admin;
-    }
 }

@@ -1,7 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.entity;
 
-import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.RegistrationRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,7 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor
 
 @Entity
-public class Admin {
+public class Customer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -28,10 +31,10 @@ public class Admin {
     private String email;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false, unique = true)
     private String mobileNumber;
+
+    @Column(nullable = false)
+    private String address;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -39,13 +42,12 @@ public class Admin {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public static Admin fromDTO(RegistrationRequestDto dto){
-        Admin admin = new Admin();
-        admin.setName(dto.getName());
-        admin.setEmail(dto.getEmail());
-        admin.setPassword(dto.getPassword());
-        admin.setMobileNumber(dto.getMobileNumber());
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
+    List<Vehicle> vehicles = new ArrayList<>();
 
-        return admin;
-    }
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    List<Appointment> appointments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<Estimate> estimates = new ArrayList<>();
 }
