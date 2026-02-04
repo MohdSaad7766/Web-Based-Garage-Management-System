@@ -1,14 +1,14 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.AppointmentRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.AppointmentResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @AllArgsConstructor
 
@@ -28,9 +28,15 @@ public class AppointmentController {
                 "Appointment Request has been raised successfully"));
     }
 
-    public void getAppointment(){
-
+    @GetMapping("/{id}")
+    public ResponseEntity<AppointmentResponseDto> getAppointmentById(@PathVariable UUID id){
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
     }
+
+
+//    public void getAppointments(){
+//
+//    }
 
     public void updateAppointment(){
 

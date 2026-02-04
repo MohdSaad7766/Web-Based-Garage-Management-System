@@ -1,6 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.DuplicateAppointmentException;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.IdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.VehicleAlreadyAssignedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,15 @@ public class GlobalExceptionHandler {
     ) {
         return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
+
+    @ExceptionHandler(IdNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleIdNotFoundException(
+            IdNotFoundException e,
+            HttpServletRequest request
+    ) {
+        return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
+
 
     private ResponseEntity<Map<String, Object>> buildResponse(
             String message,
