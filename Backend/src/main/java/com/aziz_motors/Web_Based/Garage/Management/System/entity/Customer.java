@@ -1,5 +1,6 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.entity;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,4 +51,17 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Estimate> estimates = new ArrayList<>();
+
+    public void addVehicle(Vehicle vehicle) {
+        if (!vehicles.contains(vehicle)) {
+            vehicles.add(vehicle);
+            vehicle.setCustomer(this);
+        }
+    }
+
+
+    public void addAppointment(Appointment appointment){
+        this.getAppointments().add(appointment);
+        appointment.setCustomer(this);
+    }
 }

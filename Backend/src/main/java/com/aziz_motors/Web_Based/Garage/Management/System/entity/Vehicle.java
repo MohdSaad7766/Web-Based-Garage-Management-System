@@ -1,5 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.entity;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.FuelType;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,9 +30,14 @@ public class Vehicle {
     @Column(nullable = false)
     private int modelYear;
 
+    @Column(nullable = false, unique = true)
     private String registrationNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FuelType fuelType;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 }

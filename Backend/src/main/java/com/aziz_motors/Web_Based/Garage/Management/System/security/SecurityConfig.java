@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                     .requestMatchers("/auth/login").permitAll()
+                     .requestMatchers("/auth/login","/appointment/add").permitAll()
                         .anyRequest().authenticated())
 
                 .authenticationProvider(
