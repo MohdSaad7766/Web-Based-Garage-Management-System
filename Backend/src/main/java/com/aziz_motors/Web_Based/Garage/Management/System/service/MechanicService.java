@@ -6,6 +6,11 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWith
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.MechanicRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.MechanicRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.MechanicResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,6 +18,7 @@ import java.util.UUID;
 @Service
 public class MechanicService {
     private final MechanicRepository mechanicRepository;
+    private final int PAGE_SIZE = 10;
 
     MechanicService(MechanicRepository mechanicRepository){
         this.mechanicRepository = mechanicRepository;
@@ -34,6 +40,20 @@ public class MechanicService {
 
         return toMechanicResponseDto(mechanic);
 
+    }
+
+    public PaginatedResponse<MechanicResponseDto> getMechanics(int pageNo){
+        Sort sort = Sort.by("createdAt").ascending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+
+        Page<MechanicResponseDto> page = mechanicRepository.findAllByPage(pageable);
+
+        return new PaginatedResponse<>(
+                page.getContent(),
+                pageNo,
+                page.getTotalPages(),
+                page.getTotalElements()
+        );
     }
 
     private MechanicResponseDto toMechanicResponseDto(Mechanic mechanic){

@@ -2,6 +2,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.MechanicRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.MechanicResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.MechanicService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,8 @@ public class MechanicController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public void getMechanics(@PathVariable int pageNo){
-
+    public ResponseEntity<PaginatedResponse<MechanicResponseDto>> getMechanics(@PathVariable int pageNo){
+        return ResponseEntity.ok(mechanicService.getMechanics(pageNo));
     }
 
     public void updateMechanic(){
