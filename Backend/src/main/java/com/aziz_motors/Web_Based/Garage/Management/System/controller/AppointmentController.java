@@ -43,7 +43,9 @@ public class AppointmentController {
 
 
     @PatchMapping("/update-status/{id}")
-    public ResponseEntity<GeneralMessageResponse> updateAppointmentStatus(@PathVariable UUID id, @RequestParam AppointmentStatus status, @RequestParam boolean sentMail){
+    public ResponseEntity<GeneralMessageResponse> updateAppointmentStatus(@PathVariable UUID id,
+                                                                          @RequestParam AppointmentStatus status,
+                                                                          @RequestParam(required = false,defaultValue = "false") boolean sentMail){
         appointmentService.updateAppointmentStatus(id, status, sentMail);
         return ResponseEntity.ok(new GeneralMessageResponse(true,"Appointment status has been updated."));
     }

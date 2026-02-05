@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -41,4 +42,6 @@ public class Mechanic {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    private LocalDate joinDate;
 }

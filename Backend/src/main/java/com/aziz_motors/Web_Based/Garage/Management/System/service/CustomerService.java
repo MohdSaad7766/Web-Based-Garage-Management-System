@@ -4,13 +4,11 @@ import com.aziz_motors.Web_Based.Garage.Management.System.entity.Appointment;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Customer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Estimate;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
-import com.aziz_motors.Web_Based.Garage.Management.System.exception.CustomerEmailAlreadyRegisteredException;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.CustomerWithEmailAlreadyRegisteredException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.CustomerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerRequestDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +37,7 @@ public class CustomerService {
 
     public UUID addCustomer(CustomerRequestDto dto){
         if(customerRepository.findByEmail(dto.getEmail()).isPresent()){
-            throw new CustomerEmailAlreadyRegisteredException(
+            throw new CustomerWithEmailAlreadyRegisteredException(
                     "Email- "+dto.getEmail()+" belongs to an another customer or the customer is already registered.");
         }
 

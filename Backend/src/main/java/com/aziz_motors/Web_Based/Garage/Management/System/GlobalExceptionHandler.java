@@ -1,9 +1,6 @@
 package com.aziz_motors.Web_Based.Garage.Management.System;
 
-import com.aziz_motors.Web_Based.Garage.Management.System.exception.CustomerEmailAlreadyRegisteredException;
-import com.aziz_motors.Web_Based.Garage.Management.System.exception.DuplicateAppointmentException;
-import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
-import com.aziz_motors.Web_Based.Garage.Management.System.exception.VehicleAlreadyAssignedException;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +38,9 @@ public class GlobalExceptionHandler {
         return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(CustomerEmailAlreadyRegisteredException.class)
+    @ExceptionHandler({CustomerWithEmailAlreadyRegisteredException.class, MechanicWithEmailAlreadyRegisteredException.class})
     public ResponseEntity<Map<String, Object>> handleCustomerEmailAlreadyRegisteredException(
-            CustomerEmailAlreadyRegisteredException e,
+            Exception e,
             HttpServletRequest request
     ) {
         return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
