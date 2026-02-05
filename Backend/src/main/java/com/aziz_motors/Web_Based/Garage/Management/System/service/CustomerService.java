@@ -9,11 +9,12 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWith
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.CustomerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleRequestDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.AppointmentResponseDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.FullCustomerResponseDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-
+    private final int PAGE_SIZE = 10;
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
@@ -58,6 +59,19 @@ public class CustomerService {
         return toFullCustomerResponseDto(customer);
     }
 
+
+    public PaginatedResponse<CustomerResponseDto> getCustomers(int pageNo){
+        Sort sort = Sort.by("createdAt").ascending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+
+        Page<CustomerResponseDto> page = customerRepository.findAllByPage(pageable);
+
+        return new PaginatedResponse<>(
+                page.getContent(),
+                pageNo,
+                page.getTotalPages(),
+                page.getTotalElements());
+    }
     private FullCustomerResponseDto toFullCustomerResponseDto(Customer customer){
         FullCustomerResponseDto dto = new FullCustomerResponseDto();
 
@@ -81,7 +95,7 @@ public class CustomerService {
 
         List<EstimateResponseDto> estimates = new ArrayList<>();
         for(Estimate estimate : customer.getEstimates()){
-
+            estimates.add(toEstimateResponseDto(estimate));
         }
         dto.setEstimates(estimates);
 
@@ -111,6 +125,14 @@ public class CustomerService {
         dto.setCreatedAt(appointment.getCreatedAt());
         dto.setUpdatedAt(appointment.getUpdatedAt());
 
+        return dto;
+    }
+
+    private EstimateResponseDto toEstimateResponseDto(Estimate estimate){
+        EstimateResponseDto dto = new EstimateResponseDto();
+
+
+        // work is remaining
         return dto;
     }
 
