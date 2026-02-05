@@ -12,14 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class CustomerResponseDto {
+public class EstimateResponseDto {
     private UUID id;
-
-    private String name;
-
-    private String email;
-
-    private String mobileNumber;
-
-    private String address;
 }

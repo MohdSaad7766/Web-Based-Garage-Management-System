@@ -1,9 +1,8 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
-import com.aziz_motors.Web_Based.Garage.Management.System.entity.Appointment;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.AppointmentStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.AppointmentRequestDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.AppointmentResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.FullAppointmentResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.AppointmentService;
@@ -32,13 +31,13 @@ public class AppointmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppointmentResponseDto> getAppointmentById(@PathVariable UUID id){
+    public ResponseEntity<FullAppointmentResponseDto> getAppointmentById(@PathVariable UUID id){
         return ResponseEntity.ok(appointmentService.getAppointmentById(id));
     }
 
 
     @GetMapping("/get-all/{pageNo}")
-    public ResponseEntity<PaginatedResponse<AppointmentResponseDto>> getAppointments(@PathVariable int pageNo){
+    public ResponseEntity<PaginatedResponse<FullAppointmentResponseDto>> getAppointments(@PathVariable int pageNo){
         return ResponseEntity.ok(appointmentService.getAppointments(pageNo));
     }
 
@@ -52,8 +51,10 @@ public class AppointmentController {
     public void updateAppointment(){
 
     }
-    public void deleteAppointment(){
 
+    @DeleteMapping("/{id}")
+    public void deleteAppointment(@PathVariable UUID id){
+        
     }
 }
 

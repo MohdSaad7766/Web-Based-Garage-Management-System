@@ -5,12 +5,12 @@ import com.aziz_motors.Web_Based.Garage.Management.System.entity.Customer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.AppointmentStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.DuplicateAppointmentException;
-import com.aziz_motors.Web_Based.Garage.Management.System.exception.IdNotFoundException;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.VehicleAlreadyAssignedException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.AppointmentRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.CustomerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.AppointmentRequestDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.AppointmentResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.FullAppointmentResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
@@ -102,21 +102,21 @@ public class AppointmentService {
     }
 
 
-    public AppointmentResponseDto getAppointmentById(UUID id){
+    public FullAppointmentResponseDto getAppointmentById(UUID id){
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(()->
-                new IdNotFoundException("Appointment with id-"+id + " not found."));
+                new ResourceWithProvidedIdNotFoundException("Appointment with id-"+id + " not found."));
 
         return toDto(appointment);
     }
 
 
-    public PaginatedResponse<AppointmentResponseDto> getAppointments(int pageNo){
+    public PaginatedResponse<FullAppointmentResponseDto> getAppointments(int pageNo){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
         Page<Appointment> page = appointmentRepository.findAll(pageable);
 
-        List<AppointmentResponseDto> content = new ArrayList<>();
+        List<FullAppointmentResponseDto> content = new ArrayList<>();
 
         for(Appointment appointment : page.getContent()){
             content.add(toDto(appointment));
@@ -133,7 +133,7 @@ public class AppointmentService {
     public void updateAppointmentStatus(UUID id, AppointmentStatus status, boolean sentMail){
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(()->
-                        new IdNotFoundException("Appointment with id-"+id+" not found...")
+                        new ResourceWithProvidedIdNotFoundException("Appointment with id-"+id+" not found...")
                 );
         appointment.setStatus(status);
 
@@ -144,7 +144,7 @@ public class AppointmentService {
         }
     }
 
-    private AppointmentResponseDto toDto(Appointment appointment){
+    private FullAppointmentResponseDto toDto(Appointment appointment){
         Customer customer = appointment.getCustomer();
         Vehicle vehicle = appointment.getVehicle();
 
@@ -153,7 +153,7 @@ public class AppointmentService {
         customerDto.setEmail(customer.getEmail());
         customerDto.setMobileNumber(customer.getMobileNumber());
         customerDto.setAddress(customer.getAddress());
-        customerDto.setCustomerId(customer.getId());
+        customerDto.setId(customer.getId());
 
         VehicleResponseDto vehicleDto = new VehicleResponseDto();
         vehicleDto.setManufacturerName(vehicle.getManufacturerName());
@@ -164,7 +164,7 @@ public class AppointmentService {
         vehicleDto.setVehicleId(vehicle.getId());
 
 
-        AppointmentResponseDto appointmentDto = new AppointmentResponseDto();
+        FullAppointmentResponseDto appointmentDto = new FullAppointmentResponseDto();
 
         appointmentDto.setServiceType(appointment.getServiceType());
         appointmentDto.setDateTime(appointment.getDateTime());

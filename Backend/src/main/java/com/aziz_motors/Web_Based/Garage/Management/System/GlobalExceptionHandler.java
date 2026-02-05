@@ -1,7 +1,8 @@
 package com.aziz_motors.Web_Based.Garage.Management.System;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.CustomerEmailAlreadyRegisteredException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.DuplicateAppointmentException;
-import com.aziz_motors.Web_Based.Garage.Management.System.exception.IdNotFoundException;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.VehicleAlreadyAssignedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,13 +33,22 @@ public class GlobalExceptionHandler {
         return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(IdNotFoundException.class)
+    @ExceptionHandler(ResourceWithProvidedIdNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleIdNotFoundException(
-            IdNotFoundException e,
+            ResourceWithProvidedIdNotFoundException e,
             HttpServletRequest request
     ) {
         return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
+
+    @ExceptionHandler(CustomerEmailAlreadyRegisteredException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomerEmailAlreadyRegisteredException(
+            CustomerEmailAlreadyRegisteredException e,
+            HttpServletRequest request
+    ) {
+        return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
+
 
 
     private ResponseEntity<Map<String, Object>> buildResponse(

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -12,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class CustomerResponseDto {
+public class FullCustomerResponseDto {
     private UUID id;
 
     private String name;
@@ -22,4 +24,8 @@ public class CustomerResponseDto {
     private String mobileNumber;
 
     private String address;
+    
+    List<VehicleResponseDto> vehicles = new ArrayList<>();
+    List<AppointmentResponseDto> appointments = new ArrayList<>();
+    List<EstimateResponseDto> estimates = new ArrayList<>();
 }

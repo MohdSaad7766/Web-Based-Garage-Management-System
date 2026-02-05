@@ -15,8 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class AppointmentResponseDto
-{
+public class FullAppointmentResponseDto {
     private UUID appointmentId;
 
     private LocalDateTime dateTime;
@@ -28,4 +27,8 @@ public class AppointmentResponseDto
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private CustomerResponseDto customer;
+
+    private VehicleResponseDto vehicle;
 }

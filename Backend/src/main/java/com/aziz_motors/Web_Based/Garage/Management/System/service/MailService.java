@@ -1,10 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.service;
 
-import com.aziz_motors.Web_Based.Garage.Management.System.entity.Appointment;
-import com.aziz_motors.Web_Based.Garage.Management.System.entity.Customer;
-import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.AppointmentStatus;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.AppointmentResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.FullAppointmentResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
 import jakarta.mail.MessagingException;
@@ -27,7 +24,7 @@ public class MailService {
     }
 
     @Async
-    public void sendAppointmentMail(AppointmentResponseDto appointment, AppointmentStatus status) {
+    public void sendAppointmentMail(FullAppointmentResponseDto appointment, AppointmentStatus status) {
 
         CustomerResponseDto customer = appointment.getCustomer();
 
@@ -67,7 +64,7 @@ public class MailService {
         };
     }
 
-    private String getHtmlText(AppointmentResponseDto appointment, AppointmentStatus status) {
+    private String getHtmlText(FullAppointmentResponseDto appointment, AppointmentStatus status) {
 
         CustomerResponseDto customer = appointment.getCustomer();
         VehicleResponseDto vehicle = appointment.getVehicle();
