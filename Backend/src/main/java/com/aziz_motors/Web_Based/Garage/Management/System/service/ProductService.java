@@ -8,6 +8,9 @@ import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductReq
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +44,17 @@ public class ProductService {
     }
 
     public PaginatedResponse<ProductResponseDto> getProducts(int pageNo){
-        Sort sort = Sort.by("")
+        Sort sort = Sort.by("createdAt").ascending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+
+        Page<ProductResponseDto> page = productRepository.findAllByPage(pageable);
+
+        return new PaginatedResponse<>(
+                page.getContent(),
+                pageNo,
+                page.getTotalPages(),
+                page.getTotalElements()
+        );
     }
 
     private ProductResponseDto toDto(Product product){

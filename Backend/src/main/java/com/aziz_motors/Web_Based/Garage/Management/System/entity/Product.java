@@ -2,11 +2,15 @@ package com.aziz_motors.Web_Based.Garage.Management.System.entity;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.ProductType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -41,4 +45,10 @@ public class Product {
     private String hsnCode;
 
     private boolean active = true;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

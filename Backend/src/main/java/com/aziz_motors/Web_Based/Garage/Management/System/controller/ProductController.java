@@ -2,6 +2,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.ProductRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    public void getProducts(){
-
+    @GetMapping("/get-all/{pageNo}")
+    public ResponseEntity<PaginatedResponse<ProductResponseDto>> getProducts(@PathVariable int pageNo){
+        return ResponseEntity.ok(productService.getProducts(pageNo));
     }
 
     public void updateProduct(){
