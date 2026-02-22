@@ -1,13 +1,12 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.repository.ProductRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -27,9 +26,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.addProduct(dto));
     }
 
-    
-    public void getProductById(){
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable UUID id){
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     public void getProducts(){

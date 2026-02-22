@@ -2,9 +2,13 @@ package com.aziz_motors.Web_Based.Garage.Management.System.service;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Product;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ProductAlreadyExistsException;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.ProductRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,6 +17,7 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final int PAGE_SIZE = 10;
 
     @Autowired
     public ProductService(ProductRepository productRepository){
@@ -26,6 +31,32 @@ public class ProductService {
 
         Product product = fromDto(dto);
         return productRepository.save(product).getId();
+    }
+
+    public ProductResponseDto getProductById(UUID id){
+        Product product = productRepository.findById(id).orElseThrow(()->
+                new ResourceWithProvidedIdNotFoundException());
+
+        return toDto(product);
+    }
+
+    public PaginatedResponse<ProductResponseDto> getProducts(int pageNo){
+        Sort sort = Sort.by("")
+    }
+
+    private ProductResponseDto toDto(Product product){
+        ProductResponseDto dto = new ProductResponseDto();
+
+        dto.setName(product.getName());
+        dto.setType(product.getType());
+        dto.setTaxPercentage(product.getTaxPercentage());
+        dto.setUnit(product.getUnit());
+        dto.setActive(product.isActive());
+        dto.setManufacturer(product.getManufacturer());
+        dto.setHsnCode(product.getHsnCode());
+        dto.setBasePrice(product.getBasePrice());
+
+        return dto;
     }
 
     private Product fromDto(ProductRequestDto dto){
