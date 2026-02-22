@@ -38,6 +38,20 @@ public class GlobalExceptionHandler {
         return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(DealerAlreadyExistsException.class)
+    public ResponseEntity<Map<String,Object>> handleDealerAlreadyExistsException(
+            DealerAlreadyExistsException e,
+            HttpServletRequest request){
+        return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<Map<String,Object>> handleProductAlreadyExistsException(
+            ProductAlreadyExistsException e,
+            HttpServletRequest request){
+        return buildResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
+
     @ExceptionHandler({CustomerWithEmailAlreadyRegisteredException.class, MechanicWithEmailAlreadyRegisteredException.class})
     public ResponseEntity<Map<String, Object>> handleCustomerEmailAlreadyRegisteredException(
             Exception e,

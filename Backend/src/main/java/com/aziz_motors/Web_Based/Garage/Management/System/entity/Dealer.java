@@ -26,6 +26,7 @@ public class Dealer {
     private String name;
 
 //    Business Details
+    @Column(unique = true)
     private String gstNumber;
     private String panNumber;
 
@@ -41,8 +42,9 @@ public class Dealer {
     private String contactPersonEmail;
 
     @ElementCollection
-    private List<String> phoneNumbers = new ArrayList<>();
+    private Set<String> phoneNumbers = new HashSet<>();
 
+    @Column(unique = true, nullable = false)
     private String email;
     private String website;
 
