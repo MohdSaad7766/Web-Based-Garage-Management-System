@@ -35,7 +35,7 @@ public class DealerResponseDto {
     private String contactPersonPhone;
     private String contactPersonEmail;
 
-    private Set<String> phoneNumbers = new HashSet<>();
+    private String phoneNumber;
 
     private String email;
     private String website;
@@ -43,7 +43,6 @@ public class DealerResponseDto {
     private String bankName;
     private String bankAccountNumber;
     private String bankIFSC;
-
 
 
 //    @OneToMany(mappedBy = "dealer", cascade = CascadeType.ALL)

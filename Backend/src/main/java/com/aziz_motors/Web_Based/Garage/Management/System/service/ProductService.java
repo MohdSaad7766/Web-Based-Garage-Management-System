@@ -44,7 +44,7 @@ public class ProductService {
     }
 
     public PaginatedResponse<ProductResponseDto> getProducts(int pageNo){
-        Sort sort = Sort.by("createdAt").ascending();
+        Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
         Page<ProductResponseDto> page = productRepository.findAllByPage(pageable);

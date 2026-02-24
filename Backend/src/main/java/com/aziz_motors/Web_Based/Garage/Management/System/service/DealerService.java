@@ -6,6 +6,12 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWith
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.DealerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.DealerRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.DealerResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -14,6 +20,7 @@ import java.util.UUID;
 public class DealerService {
 
     private final DealerRepository dealerRepository;
+    private final int PAGE_SIZE = 10;
 
     public DealerService(DealerRepository dealerRepository){
         this.dealerRepository = dealerRepository;
@@ -35,6 +42,22 @@ public class DealerService {
         return toDto(dealer);
     }
 
+
+    public PaginatedResponse<DealerResponseDto> getDealers(int pageNo){
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+
+        Page<DealerResponseDto> page = dealerRepository.findAllByPage(pageable);
+
+
+        return new PaginatedResponse<>(
+                page.getContent(),
+                pageNo,
+                page.getTotalPages(),
+                page.getTotalElements()
+        );
+    }
+
     private DealerResponseDto toDto(Dealer dealer){
         DealerResponseDto dto = new DealerResponseDto();
 
@@ -50,7 +73,7 @@ public class DealerService {
         dto.setContactPersonName(dealer.getContactPersonName());
         dto.setContactPersonEmail(dealer.getContactPersonEmail());
         dto.setContactPersonPhone(dealer.getContactPersonPhone());
-        dto.setPhoneNumbers(dealer.getPhoneNumbers());
+        dto.setPhoneNumber(dealer.getPhoneNumber());
         dto.setEmail(dealer.getEmail());
         dto.setWebsite(dealer.getWebsite());
         dto.setBankIFSC(dealer.getBankIFSC());
@@ -67,7 +90,7 @@ public class DealerService {
         dealer.setEmail(dto.getEmail());
         dealer.setWebsite(dto.getWebsite());
         dealer.setGstNumber(dto.getGstNumber());
-        dealer.setPhoneNumbers(dto.getPhoneNumbers());
+        dealer.setPhoneNumber(dto.getPhoneNumber());
         dealer.setPanNumber(dto.getPanNumber());
 
         dealer.setContactPersonName(dto.getContactPersonName());

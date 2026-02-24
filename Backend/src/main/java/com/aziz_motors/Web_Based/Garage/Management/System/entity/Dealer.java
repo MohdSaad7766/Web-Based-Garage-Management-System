@@ -41,8 +41,7 @@ public class Dealer {
     private String contactPersonPhone;
     private String contactPersonEmail;
 
-    @ElementCollection
-    private Set<String> phoneNumbers = new HashSet<>();
+    private String phoneNumber;
 
     @Column(unique = true, nullable = false)
     private String email;

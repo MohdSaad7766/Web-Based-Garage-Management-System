@@ -32,7 +32,7 @@ public class DealerRequestDto {
     private String contactPersonEmail;
 
 
-    private Set<String> phoneNumbers = new HashSet<>();
+    private String phoneNumber;
     private String email;
     private String website;
 

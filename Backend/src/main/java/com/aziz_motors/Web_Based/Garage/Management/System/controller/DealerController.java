@@ -2,6 +2,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.DealerRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.DealerResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.DealerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,11 @@ public class DealerController {
     @GetMapping("/{id}")
     public ResponseEntity<DealerResponseDto> getDealerById(@PathVariable UUID id){
         return ResponseEntity.ok(dealerService.getDealerById(id));
+    }
+
+    @GetMapping("/get-all/{pageNo}")
+    public ResponseEntity<PaginatedResponse<DealerResponseDto>> getDealers(@PathVariable int pageNo){
+        return ResponseEntity.ok(dealerService.getDealers(pageNo));
     }
 
     public void updateDealer(){

@@ -18,6 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("""
             SELECT new com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto
             (
+                p.id,
                 p.name,
                 p.type,
                 p.basePrice,
