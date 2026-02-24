@@ -60,6 +60,7 @@ public class ProductService {
     private ProductResponseDto toDto(Product product){
         ProductResponseDto dto = new ProductResponseDto();
 
+        dto.setId(product.getId());
         dto.setName(product.getName());
         dto.setType(product.getType());
         dto.setTaxPercentage(product.getTaxPercentage());

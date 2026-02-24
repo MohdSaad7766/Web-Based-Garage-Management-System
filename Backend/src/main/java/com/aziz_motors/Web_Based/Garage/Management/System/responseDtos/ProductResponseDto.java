@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,6 +15,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 
 public class ProductResponseDto {
+
+    private UUID id;
+
     private String name;
 
     private ProductType type;   // SPARE_PART, SERVICE, CONSUMABLE
