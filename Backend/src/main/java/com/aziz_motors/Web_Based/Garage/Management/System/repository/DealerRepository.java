@@ -35,7 +35,8 @@ public interface DealerRepository extends JpaRepository<Dealer, UUID> {
             d.website,
             d.bankName,
             d.bankAccountNumber,
-            d.bankIFSC            
+            d.bankIFSC,
+            null
           )
           FROM Dealer d
           """)

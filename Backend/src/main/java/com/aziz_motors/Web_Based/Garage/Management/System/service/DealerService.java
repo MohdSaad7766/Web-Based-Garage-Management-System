@@ -1,31 +1,39 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.service;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Dealer;
+import com.aziz_motors.Web_Based.Garage.Management.System.entity.PaymentReceipt;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.DealerAlreadyExistsException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.DealerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.DealerRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.DealerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class DealerService {
 
     private final DealerRepository dealerRepository;
-    private final int PAGE_SIZE = 10;
+    @Value("${page.size}")
+    private int PAGE_SIZE;
 
     public DealerService(DealerRepository dealerRepository){
         this.dealerRepository = dealerRepository;
     }
 
+    @Transactional
     public UUID addDealer(DealerRequestDto dto){
         if(dealerRepository.findByNameOrEmailOrGstNumber(dto.getName(), dto.getEmail(), dto.getGstNumber()).isPresent()){
             throw new DealerAlreadyExistsException();
@@ -79,6 +87,33 @@ public class DealerService {
         dto.setBankIFSC(dealer.getBankIFSC());
         dto.setBankName(dealer.getBankName());
         dto.setBankAccountNumber(dealer.getBankAccountNumber());
+        dto.setPaymentReceipts(toDto(dealer.getPaymentReceipts()));
+
+        return dto;
+    }
+
+    private List<PaymentReceiptResponseDto> toDto(List<PaymentReceipt> paymentReceipts){
+        List<PaymentReceiptResponseDto> dtos = new ArrayList<>();
+
+        for(PaymentReceipt paymentReceipt : paymentReceipts){
+            dtos.add(toDto(paymentReceipt));
+        }
+
+        return dtos;
+    }
+
+    private PaymentReceiptResponseDto toDto(PaymentReceipt paymentReceipt){
+        PaymentReceiptResponseDto dto = new PaymentReceiptResponseDto();
+
+        dto.setId(paymentReceipt.getId());
+        dto.setAmountInWords(paymentReceipt.getAmountInWords());
+        dto.setAmount(paymentReceipt.getAmount());
+        dto.setPayerName(paymentReceipt.getPayerName());
+        dto.setPayeeName(paymentReceipt.getPayeeName());
+        dto.setPaymentDate(paymentReceipt.getPaymentDate());
+        dto.setPaymentType(paymentReceipt.getPaymentType());
+        dto.setReceiptNumber(paymentReceipt.getReceiptNumber());
+        dto.setDealerId(paymentReceipt.getDealer().getId());
 
         return dto;
     }
@@ -106,7 +141,32 @@ public class DealerService {
         dealer.setBankName(dto.getBankName());
         dealer.setBankIFSC(dto.getBankIFSC());
         dealer.setBankAccountNumber(dto.getBankAccountNumber());
+        dealer.setPaymentReceipts(fromDto(dto.getPaymentReceipts(), dealer));
 
         return dealer;
+    }
+
+    private List<PaymentReceipt> fromDto(List<PaymentReceiptRequestDto> dtos, Dealer dealer){
+        List<PaymentReceipt> paymentReceipts = new ArrayList<>();
+
+        for (PaymentReceiptRequestDto dto : dtos){
+            paymentReceipts.add(fromDto(dto, dealer));
+        }
+        return paymentReceipts;
+    }
+
+    private PaymentReceipt fromDto(PaymentReceiptRequestDto dto, Dealer dealer){
+        PaymentReceipt paymentReceipt = new PaymentReceipt();
+
+        paymentReceipt.setReceiptNumber(dto.getReceiptNumber());
+        paymentReceipt.setAmount(dto.getAmount());
+        paymentReceipt.setAmountInWords(dto.getAmountInWords());
+        paymentReceipt.setPaymentDate(dto.getPaymentDate());
+        paymentReceipt.setPaymentType(dto.getPaymentType());
+        paymentReceipt.setPayerName(dto.getPayerName());
+        paymentReceipt.setPayeeName(dto.getPayeeName());
+        paymentReceipt.setDealer(dealer);
+
+        return paymentReceipt;
     }
 }

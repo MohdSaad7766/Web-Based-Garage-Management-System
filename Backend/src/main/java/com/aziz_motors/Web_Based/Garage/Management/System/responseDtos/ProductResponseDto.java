@@ -32,5 +32,7 @@ public class ProductResponseDto {
 
     private String hsnCode;
 
+    private String partNumber;
+
     private boolean active = true;
 }

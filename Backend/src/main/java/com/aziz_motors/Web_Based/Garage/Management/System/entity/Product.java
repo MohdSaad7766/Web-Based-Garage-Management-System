@@ -44,6 +44,8 @@ public class Product {
     @Column(unique = true)
     private String hsnCode;
 
+    private String partNumber;
+
     private boolean active = true;
 
     @CreationTimestamp

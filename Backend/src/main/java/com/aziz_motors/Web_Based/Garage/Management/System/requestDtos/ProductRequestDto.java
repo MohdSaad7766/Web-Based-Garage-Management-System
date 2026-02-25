@@ -30,5 +30,7 @@ public class ProductRequestDto {
 
     private String hsnCode;
 
+    private String partNumber;
+
     private boolean active = true;
 }

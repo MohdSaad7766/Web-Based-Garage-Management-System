@@ -8,6 +8,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductReq
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,9 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final int PAGE_SIZE = 10;
+
+    @Value("${page.size}")
+    private int PAGE_SIZE;
 
     @Autowired
     public ProductService(ProductRepository productRepository){
@@ -69,6 +72,7 @@ public class ProductService {
         dto.setManufacturer(product.getManufacturer());
         dto.setHsnCode(product.getHsnCode());
         dto.setBasePrice(product.getBasePrice());
+        dto.setPartNumber(product.getPartNumber());
 
         return dto;
     }
@@ -83,6 +87,7 @@ public class ProductService {
         product.setUnit(dto.getUnit());
         product.setBasePrice(dto.getBasePrice());
         product.setHsnCode(dto.getHsnCode());
+        product.setPartNumber(dto.getPartNumber());
         product.setTaxPercentage(dto.getTaxPercentage());
 
         return product;

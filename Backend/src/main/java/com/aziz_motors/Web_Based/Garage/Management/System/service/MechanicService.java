@@ -7,6 +7,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.repository.MechanicRep
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.MechanicRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.MechanicResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,8 @@ import java.util.UUID;
 @Service
 public class MechanicService {
     private final MechanicRepository mechanicRepository;
-    private final int PAGE_SIZE = 10;
+    @Value("${page.size}")
+    private int PAGE_SIZE;
 
     MechanicService(MechanicRepository mechanicRepository){
         this.mechanicRepository = mechanicRepository;

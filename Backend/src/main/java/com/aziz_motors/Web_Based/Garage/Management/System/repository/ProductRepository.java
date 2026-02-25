@@ -26,6 +26,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
                 p.unit,
                 p.manufacturer,
                 p.hsnCode,
+                p.partNumber,
                 p.active
             )
             FROM Product p""")

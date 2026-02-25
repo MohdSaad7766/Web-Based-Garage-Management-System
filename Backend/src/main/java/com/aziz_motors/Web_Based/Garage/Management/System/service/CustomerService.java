@@ -9,6 +9,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWith
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.CustomerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,8 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final int PAGE_SIZE = 10;
+    @Value("${page.size}")
+    private int PAGE_SIZE;
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }

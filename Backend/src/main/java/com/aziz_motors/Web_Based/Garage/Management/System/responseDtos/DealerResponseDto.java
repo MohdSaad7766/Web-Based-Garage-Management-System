@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -43,6 +41,8 @@ public class DealerResponseDto {
     private String bankName;
     private String bankAccountNumber;
     private String bankIFSC;
+
+    private List<PaymentReceiptResponseDto> paymentReceipts = new ArrayList<>();
 
 
 //    @OneToMany(mappedBy = "dealer", cascade = CascadeType.ALL)

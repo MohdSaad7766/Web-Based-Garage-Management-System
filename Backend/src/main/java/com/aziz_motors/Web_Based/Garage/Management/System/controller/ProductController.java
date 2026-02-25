@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,6 +27,16 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<UUID> addProduct(@RequestBody ProductRequestDto dto){
         return ResponseEntity.ok(productService.addProduct(dto));
+    }
+
+    @PostMapping("/add-all")
+    public ResponseEntity<List<UUID>> addProducts(@RequestBody List<ProductRequestDto> dtos){
+        List<UUID> uuids = new ArrayList<>();
+
+        for(ProductRequestDto dto : dtos){
+            uuids.add(productService.addProduct(dto));
+        }
+        return ResponseEntity.ok(uuids);
     }
 
 

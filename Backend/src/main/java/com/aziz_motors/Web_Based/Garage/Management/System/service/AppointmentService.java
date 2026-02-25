@@ -15,6 +15,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerR
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,9 @@ public class AppointmentService {
     private VehicleService vehicleService;
     private CustomerRepository customerRepository;
     private MailService mailService;
-    private final int PAGE_SIZE = 10;
+
+    @Value("${page.size}")
+    private int PAGE_SIZE;
 
 
     @Autowired
