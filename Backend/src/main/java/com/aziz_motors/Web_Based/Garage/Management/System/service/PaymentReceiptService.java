@@ -2,8 +2,10 @@ package com.aziz_motors.Web_Based.Garage.Management.System.service;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Dealer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.PaymentReceipt;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.PaymentReceiptRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,5 +50,10 @@ public class PaymentReceiptService {
         paymentReceipt.setPayerName(dto.getPayerName());
 
         return paymentReceipt;
+    }
+
+
+    public PaymentReceiptResponseDto getPaymentReceiptById(UUID receiptId){
+        return paymentReceiptRepository.findPaymentReceiptById(receiptId).orElseThrow(()->new ResourceWithProvidedIdNotFoundException("PaymentReceipt with id-"+receiptId+" not found."));
     }
 }

@@ -1,6 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.PaymentReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,9 @@ public class PaymentReceiptController {
         return ResponseEntity.ok(paymentReceiptService.addPaymentReceipt(dealerId, dto));
     }
 
-    public void getPaymentReceiptById(){
-
+    @GetMapping("/{receiptId}")
+    public ResponseEntity<PaymentReceiptResponseDto> getPaymentReceiptById(@PathVariable UUID receiptId){
+        return ResponseEntity.ok(paymentReceiptService.getPaymentReceiptById(receiptId));
     }
 
     public void getPaymentReceiptsByDealerId(){
