@@ -5,11 +5,18 @@ import com.aziz_motors.Web_Based.Garage.Management.System.entity.PaymentReceipt;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.PaymentReceiptRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -17,6 +24,9 @@ public class PaymentReceiptService {
 
     private final PaymentReceiptRepository paymentReceiptRepository;
     private final DealerService dealerService;
+
+    @Value("${page.size}")
+    private  int PAGE_SIZE;
 
     @Autowired
     public PaymentReceiptService(
@@ -55,5 +65,14 @@ public class PaymentReceiptService {
 
     public PaymentReceiptResponseDto getPaymentReceiptById(UUID receiptId){
         return paymentReceiptRepository.findPaymentReceiptById(receiptId).orElseThrow(()->new ResourceWithProvidedIdNotFoundException("PaymentReceipt with id-"+receiptId+" not found."));
+    }
+
+    public PaginatedResponse<PaymentReceiptResponseDto> getPaymentReceiptByDealerId(int pageNo,UUID dealerId){
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+
+         Page<PaymentReceiptResponseDto> page = paymentReceiptRepository.findPaymentReceiptsByDealerId(dealerId, pageable);
+
+         return new PaginatedResponse<>(page.getContent(), pageNo, page.getTotalPages(), page.getTotalElements());
     }
 }
