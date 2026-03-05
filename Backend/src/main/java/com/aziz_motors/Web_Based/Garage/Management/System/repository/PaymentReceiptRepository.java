@@ -55,4 +55,26 @@ public interface PaymentReceiptRepository extends JpaRepository<PaymentReceipt, 
             """)
     public Page<PaymentReceiptResponseDto> findPaymentReceiptsByDealerId(@Param("dealerId") UUID dealerId, Pageable pageable);
 
+    @Query(value = """
+            Select new com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto
+            (
+                pr.id,
+                pr.receiptNumber,
+                pr.paymentDate,
+                pr.amount,
+                pr.amountInWords,
+                pr.payeeName,
+                pr.payerName,
+                pr.paymentType,
+                pr.dealer.id
+            )
+            FROM PaymentReceipt pr
+            """,
+            countQuery = """
+            SELECT COUNT(pr)
+            FROM PaymentReceipt pr
+            """)
+    public Page<PaymentReceiptResponseDto> findPaymentReceipts(Pageable pageable);
+
+
 }

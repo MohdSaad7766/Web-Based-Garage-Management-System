@@ -32,13 +32,14 @@ public class PaymentReceiptController {
         return ResponseEntity.ok(paymentReceiptService.getPaymentReceiptById(receiptId));
     }
 
-    @GetMapping("/get-all/{pageNo}")
+    @GetMapping("/get-all-by-dealer-id/{pageNo}")
     public ResponseEntity<PaginatedResponse<PaymentReceiptResponseDto>> getPaymentReceiptsByDealerId(@PathVariable int pageNo,@RequestParam UUID dealerId){
         return ResponseEntity.ok(paymentReceiptService.getPaymentReceiptByDealerId(pageNo,dealerId));
     }
 
-    public void getPaymentReceipts(){
-
+    @GetMapping("/get-all/{pageNo}")
+    public ResponseEntity<PaginatedResponse<PaymentReceiptResponseDto>> getPaymentReceipts(@PathVariable int pageNo){
+        return ResponseEntity.ok(paymentReceiptService.getPayments(pageNo));
     }
 
     public void updatePaymentReceipt(){

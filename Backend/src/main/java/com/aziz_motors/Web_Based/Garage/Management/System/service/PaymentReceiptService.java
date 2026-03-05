@@ -75,4 +75,13 @@ public class PaymentReceiptService {
 
          return new PaginatedResponse<>(page.getContent(), pageNo, page.getTotalPages(), page.getTotalElements());
     }
+
+    public PaginatedResponse<PaymentReceiptResponseDto> getPayments(int pageNo){
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+
+        Page<PaymentReceiptResponseDto> page = paymentReceiptRepository.findPaymentReceipts(pageable);
+
+        return new PaginatedResponse<>(page.getContent(), pageNo, page.getTotalPages(), page.getTotalElements());
+    }
 }
