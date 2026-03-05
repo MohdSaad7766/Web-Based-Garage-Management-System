@@ -43,12 +43,19 @@ public class DealerService {
     }
 
 
-    public DealerResponseDto getDealerById(UUID id){
+    public DealerResponseDto getDealerResponseById(UUID id){
         Dealer dealer = dealerRepository.findById(id).orElseThrow(()->
                 new ResourceWithProvidedIdNotFoundException("Dealer with id-"+id+" not found."));
 
         return toDto(dealer);
     }
+
+    public Dealer getDealerById(UUID id){
+        return dealerRepository.findById(id).orElseThrow(()->
+                new ResourceWithProvidedIdNotFoundException("Dealer with id-"+id+" not found."));
+
+    }
+
 
 
     public PaginatedResponse<DealerResponseDto> getDealers(int pageNo){

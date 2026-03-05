@@ -26,7 +26,7 @@ public class DealerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DealerResponseDto> getDealerById(@PathVariable UUID id){
-        return ResponseEntity.ok(dealerService.getDealerById(id));
+        return ResponseEntity.ok(dealerService.getDealerResponseById(id));
     }
 
     @GetMapping("/get-all/{pageNo}")
