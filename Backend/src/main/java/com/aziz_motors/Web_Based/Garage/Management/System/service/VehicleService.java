@@ -52,6 +52,11 @@ public class VehicleService {
         customerRepository.save(customer);
     }
 
+    public Vehicle getVehicleById(UUID id){
+        return vehicleRepository.findById(id).orElseThrow(()->
+                new ResourceWithProvidedIdNotFoundException("Vehicle with id-"+id+" not found."));
+    }
+
 
     private Vehicle fromDto(VehicleRequestDto dto) {
         Vehicle vehicle = new Vehicle();

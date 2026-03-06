@@ -3,6 +3,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.service;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Customer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Estimate;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.EstimateItem;
+import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateItemRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateItemRequestDto;
@@ -19,34 +20,51 @@ public class EstimateService {
     private final EstimateItemRepository estimateItemRepository;
     private final EstimateRepository  estimateRepository;
     private final CustomerService customerService;
+    private final VehicleService vehicleService;
 
-    public EstimateService(EstimateItemRepository estimateItemRepository, CustomerService customerService, EstimateRepository  estimateRepository){
+    public EstimateService(EstimateItemRepository estimateItemRepository,
+                           CustomerService customerService,
+                           EstimateRepository  estimateRepository,
+                           VehicleService vehicleService){
         this.estimateItemRepository = estimateItemRepository;
         this.customerService = customerService;
         this.estimateRepository = estimateRepository;
+        this.vehicleService = vehicleService;
     }
 
     @Transactional
     public UUID addEstimate(EstimateRequestDto dto){
         Customer customer = customerService.getCustomerById(dto.getCustomerId());
+        Vehicle vehicle = vehicleService.getVehicleById(dto.getVehicleId());
 
         Estimate estimate = fromDto(dto);
         estimate.setCustomer(customer);
+        estimate.setVehicle(vehicle);
+
         customer.getEstimates().add(estimate);
 
         return estimateRepository.save(estimate).getId();
     }
+
+
 
     private Estimate fromDto(EstimateRequestDto dto){
         Estimate estimate = new Estimate();
 
         List<EstimateItem> items = fromDto(dto.getEstimateItems());
 
+
         for(EstimateItem item : items){
-            item.setEstimate(estimate);   
+            item.setEstimate(estimate);
         }
 
         estimate.setEstimateItems(items);
+        estimate.setEstimateNumber(dto.getEstimateNumber());
+        estimate.setNotes(dto.getNotes());
+        estimate.setStatus(dto.getStatus());
+        estimate.setIssueDate(dto.getIssueDate());
+        estimate.setValidUntil(dto.getValidUntil());
+        estimate.setGrandTotal(dto.getGrandTotal());
 
         return estimate;
     }
