@@ -29,7 +29,7 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FullCustomerResponseDto> getCustomerById(@PathVariable UUID id){
-        return ResponseEntity.ok(customerService.getCustomerById(id));
+        return ResponseEntity.ok(customerService.getCustomerResponseById(id));
     }
 
     @GetMapping("/get-all/{pageNo}")

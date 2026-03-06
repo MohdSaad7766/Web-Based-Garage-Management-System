@@ -13,4 +13,6 @@ public class PurchaseInvoice {
     @ManyToOne
     @JoinColumn(name = "dealer_id")
     private Dealer dealer;
+
+
 }

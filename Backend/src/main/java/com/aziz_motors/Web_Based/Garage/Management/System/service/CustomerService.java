@@ -50,13 +50,20 @@ public class CustomerService {
 
 
 
-    public FullCustomerResponseDto getCustomerById(UUID customerId){
+    public FullCustomerResponseDto getCustomerResponseById(UUID customerId){
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(()->
                         new ResourceWithProvidedIdNotFoundException("Customer with id- "+customerId + " not found...")
                 );
 
         return toFullCustomerResponseDto(customer);
+    }
+
+    public Customer getCustomerById(UUID customerId){
+        return customerRepository.findById(customerId)
+                .orElseThrow(()->
+                        new ResourceWithProvidedIdNotFoundException("Customer with id- "+customerId + " not found...")
+                );
     }
 
 
