@@ -1,5 +1,6 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.responseDtos;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.FuelType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,4 +27,13 @@ public class VehicleResponseDto {
     private String registrationNumber;
 
     private FuelType fuelType;
+
+    public VehicleResponseDto(Vehicle vehicle){
+        this.setVehicleId(vehicle.getId());
+        this.setManufacturerName(vehicle.getManufacturerName());
+        this.setModelName(vehicle.getModelName());
+        this.setModelYear(vehicle.getModelYear());
+        this.setRegistrationNumber(vehicle.getRegistrationNumber());
+        this.setFuelType(vehicle.getFuelType());
+    }
 }

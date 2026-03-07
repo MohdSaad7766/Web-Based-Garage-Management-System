@@ -1,12 +1,10 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.EstimateService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -25,7 +23,18 @@ public class EstimateController {
         return ResponseEntity.ok(estimateService.addEstimate(dto));
     }
 
-    public void getEstimate(){
+    @GetMapping("/{estimateId}")
+    public ResponseEntity<EstimateResponseDto> getEstimateById(@PathVariable UUID estimateId){
+        return ResponseEntity.ok(estimateService.getEstimateResponseById(estimateId));
+    }
+
+    @GetMapping("get-all-by-customer-id/{pageNo}")
+    public void getEstimatesByCustomerId(@PathVariable int pageNo,@RequestParam UUID customerId){
+
+    }
+
+    @GetMapping("/get-all/{pageNo}")
+    public void getEstimates(@PathVariable int pageNo){
 
     }
 

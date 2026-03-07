@@ -59,8 +59,4 @@ public class Estimate {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-//    public String generateEstimateNumber(){
-//
-//    }
 }

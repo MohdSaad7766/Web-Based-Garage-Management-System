@@ -5,10 +5,15 @@ import com.aziz_motors.Web_Based.Garage.Management.System.entity.Estimate;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.EstimateItem;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.EstimateStatus;
+import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateItemRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateItemRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateItemResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +54,30 @@ public class EstimateService {
         return estimateRepository.save(estimate).getId();
     }
 
+
+    public EstimateResponseDto getEstimateResponseById(UUID estimateId){
+        Estimate estimate = getEstimateById(estimateId);
+
+        EstimateResponseDto dto = new EstimateResponseDto();
+        dto.setId(estimateId);
+        dto.setEstimateNumber(estimate.getEstimateNumber());
+        dto.setNotes(estimate.getNotes());
+        dto.setStatus(estimate.getStatus());
+        dto.setGrandTotal(estimate.getGrandTotal());
+        dto.setIssueDate(estimate.getIssueDate());
+        dto.setValidUntil(estimate.getValidUntil());
+
+        dto.setCustomer(new CustomerResponseDto(estimate.getCustomer()));
+        dto.setVehicle(new VehicleResponseDto((estimate.getVehicle())));
+        dto.setEstimateItems(EstimateItemResponseDto.getItemsResponse(estimate.getEstimateItems()));
+
+        return dto;
+    }
+
+    public Estimate getEstimateById(UUID estimateId){
+        return estimateRepository.findById(estimateId).orElseThrow(()->
+                new ResourceWithProvidedIdNotFoundException("Estimate with id-"+estimateId+" not found."));
+    }
 
 
     private Estimate fromDto(EstimateRequestDto dto){
