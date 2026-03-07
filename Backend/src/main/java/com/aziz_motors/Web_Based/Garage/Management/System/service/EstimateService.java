@@ -4,6 +4,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.entity.Customer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Estimate;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.EstimateItem;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.EstimateStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateItemRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateItemRequestDto;
@@ -11,6 +12,8 @@ import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateRe
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -59,12 +62,14 @@ public class EstimateService {
         }
 
         estimate.setEstimateItems(items);
-        estimate.setEstimateNumber(dto.getEstimateNumber());
+        estimate.setEstimateNumber(generateEstimateNumber());
         estimate.setNotes(dto.getNotes());
-        estimate.setStatus(dto.getStatus());
+        estimate.setStatus(EstimateStatus.DRAFT);
         estimate.setIssueDate(dto.getIssueDate());
         estimate.setValidUntil(dto.getValidUntil());
-        estimate.setGrandTotal(dto.getGrandTotal());
+
+
+        estimate.setGrandTotal(calculateGrandTotal(items));
 
         return estimate;
     }
@@ -80,18 +85,75 @@ public class EstimateService {
         return items;
     }
 
-    private EstimateItem fromDto(EstimateItemRequestDto dto){
+    private EstimateItem fromDto(EstimateItemRequestDto dto) {
         EstimateItem item = new EstimateItem();
 
         item.setItemName(dto.getItemName());
         item.setUnitPrice(dto.getUnitPrice());
         item.setQuantity(dto.getQuantity());
-        item.setDiscountPercentage(dto.getDiscountPercentage());
-        item.setTaxPercentage(dto.getTaxPercentage());
-        item.setDiscountAmount(dto.getDiscountAmount());
-        item.setTaxAmount(dto.getTaxAmount());
-        item.setLineTotal(dto.getLineTotal());
+
+        BigDecimal discountPercentage =
+                dto.getDiscountPercentage() != null ? dto.getDiscountPercentage() : BigDecimal.ZERO;
+
+        BigDecimal taxPercentage =
+                dto.getTaxPercentage() != null ? dto.getTaxPercentage() : BigDecimal.ZERO;
+
+        item.setDiscountPercentage(discountPercentage);
+        item.setTaxPercentage(taxPercentage);
+
+    /*
+        subtotal = unitPrice × quantity
+        discountAmount = subtotal × discountPercentage / 100
+        taxableAmount = subtotal − discountAmount
+        taxAmount = taxableAmount × taxPercentage / 100
+        lineTotal = taxableAmount + taxAmount
+    */
+
+        BigDecimal quantity = BigDecimal.valueOf(dto.getQuantity());
+
+        BigDecimal subtotal = dto.getUnitPrice().multiply(quantity);
+
+        BigDecimal discountAmount = subtotal
+                .multiply(discountPercentage)
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+        BigDecimal taxableAmount = subtotal.subtract(discountAmount);
+
+        BigDecimal taxAmount = taxableAmount
+                .multiply(taxPercentage)
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+        BigDecimal lineTotal = taxableAmount.add(taxAmount);
+
+        item.setDiscountAmount(discountAmount);
+        item.setTaxAmount(taxAmount);
+        item.setLineTotal(lineTotal);
 
         return item;
+    }
+
+    private BigDecimal calculateGrandTotal(List<EstimateItem> items){
+        BigDecimal total = BigDecimal.ZERO;
+
+        /*
+
+            lineTotal = (unitPrice * quantity) - discount + tax
+            grandTotal = sum(lineTotal)
+
+        */
+
+        for(EstimateItem item : items){
+            total = total.add(item.getLineTotal());
+        }
+
+        return total;
+    }
+
+    private String generateEstimateNumber() {
+
+        long count = estimateRepository.count() + 1;
+
+        return "EST-" + java.time.Year.now().getValue() + "-" +
+                String.format("%05d", count);
     }
 }

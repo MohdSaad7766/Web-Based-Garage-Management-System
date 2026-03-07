@@ -19,8 +19,6 @@ import java.util.UUID;
 
 public class EstimateRequestDto {
 
-    private String estimateNumber;
-
     private UUID customerId;
 
     private UUID vehicleId;
@@ -30,10 +28,6 @@ public class EstimateRequestDto {
     private LocalDate validUntil;
 
     private String notes;
-
-    private EstimateStatus status;
-
-    private BigDecimal grandTotal;
 
     private List<EstimateItemRequestDto> estimateItems = new ArrayList<>();
 }

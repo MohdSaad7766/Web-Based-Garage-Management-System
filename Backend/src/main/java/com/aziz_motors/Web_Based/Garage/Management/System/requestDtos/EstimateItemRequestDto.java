@@ -19,7 +19,5 @@ public class EstimateItemRequestDto {
     private int quantity;
     private BigDecimal discountPercentage;
     private BigDecimal taxPercentage;
-    private BigDecimal discountAmount;
-    private BigDecimal taxAmount;
-    private BigDecimal lineTotal;
+
 }
