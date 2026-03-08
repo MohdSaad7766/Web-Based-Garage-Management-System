@@ -126,6 +126,14 @@ public class EstimateService {
         return estimateRepository.save(estimate).getId();
     }
 
+    @Transactional
+    public void deleteEstimateById(UUID estimateId){
+        Estimate estimate = getEstimateById(estimateId);
+        if(estimate.getStatus() != EstimateStatus.DRAFT){
+            throw new RuntimeException("Estimate status is "+estimate.getStatus()+", it can be only updated when the Estimate DRAFT");
+        }
+        estimateRepository.delete(estimate);
+    }
 
     private void fromDto(EstimateRequestDto dto, Estimate estimate){
 
@@ -149,6 +157,8 @@ public class EstimateService {
 
         estimate.setGrandTotal(calculateGrandTotal(existingItems));
     }
+
+
 
     private Estimate fromDto(EstimateRequestDto dto){
         Estimate estimate = new Estimate();
