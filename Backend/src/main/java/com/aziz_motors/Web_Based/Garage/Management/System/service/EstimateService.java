@@ -110,6 +110,14 @@ public class EstimateService {
         );
     }
 
+    @Transactional
+    public UUID updateEstimateStatus(UUID estimateId, EstimateStatus status){
+        Estimate estimate = getEstimateById(estimateId);
+        estimate.setStatus(status);
+
+        return estimateRepository.save(estimate).getId();
+    }
+
 
     private Estimate fromDto(EstimateRequestDto dto){
         Estimate estimate = new Estimate();

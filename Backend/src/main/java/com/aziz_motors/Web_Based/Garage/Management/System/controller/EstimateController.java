@@ -1,5 +1,6 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.EstimateStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
@@ -37,6 +38,11 @@ public class EstimateController {
     @GetMapping("/get-all/{pageNo}")
     public ResponseEntity<PaginatedResponse<EstimateResponseDto>> getEstimates(@PathVariable int pageNo){
         return ResponseEntity.ok(estimateService.getEstimates(pageNo));
+    }
+
+    @PatchMapping("/update-status/{estimateId}")
+    public ResponseEntity<UUID> updateEstimateStatus(@PathVariable UUID estimateId, @RequestParam EstimateStatus status){
+        return ResponseEntity.ok(estimateService.updateEstimateStatus(estimateId, status));
     }
 
     public void updateEstimate(){
