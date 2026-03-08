@@ -10,10 +10,12 @@ import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateIte
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.EstimateRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateItemRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateRequestDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateItemResponseDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
-import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ public class EstimateService {
     private final EstimateRepository  estimateRepository;
     private final CustomerService customerService;
     private final VehicleService vehicleService;
+
+    @Value("${page.size}")
+    private int PAGE_SIZE;
 
     public EstimateService(EstimateItemRepository estimateItemRepository,
                            CustomerService customerService,
@@ -77,6 +82,18 @@ public class EstimateService {
     public Estimate getEstimateById(UUID estimateId){
         return estimateRepository.findById(estimateId).orElseThrow(()->
                 new ResourceWithProvidedIdNotFoundException("Estimate with id-"+estimateId+" not found."));
+    }
+
+    public PaginatedResponse<EstimateResponseDto> getEstimatesByCustomerId(int pageNo, UUID customerId){
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+        Page<EstimateResponseDto> page = estimateRepository.findEstimatesByCustomerId(customerId, pageable);
+        return new PaginatedResponse<>(
+                        page.getContent(),
+                        pageNo,
+                        page.getTotalPages(),
+                        page.getTotalElements()
+                );
     }
 
 
