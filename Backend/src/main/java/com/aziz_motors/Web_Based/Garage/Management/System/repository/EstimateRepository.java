@@ -58,4 +58,46 @@ public interface EstimateRepository extends JpaRepository<Estimate, UUID> {
             @Param("customerId") UUID customerId,
             Pageable pageable
     );
+
+    @Query(value = """
+        SELECT new com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto
+        (
+            e.id,
+            e.estimateNumber,
+            e.status,
+            e.issueDate,
+            e.validUntil,
+            e.notes,
+            e.grandTotal,
+            new com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto
+            (
+                c.id,
+                c.name,
+                c.email,
+                c.mobileNumber,
+                c.address
+            ),
+            new com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto
+            (
+                v.id,
+                v.manufacturerName,
+                v.modelName,
+                v.modelYear,
+                v.registrationNumber,
+                v.fuelType
+            ),
+            null
+        )
+        FROM Estimate e
+        JOIN e.customer c
+        JOIN e.vehicle v
+        """,
+            countQuery = """
+        SELECT COUNT(e)
+        FROM Estimate e
+        """
+    )
+    Page<EstimateResponseDto> findEstimates(
+            Pageable pageable
+    );
 }

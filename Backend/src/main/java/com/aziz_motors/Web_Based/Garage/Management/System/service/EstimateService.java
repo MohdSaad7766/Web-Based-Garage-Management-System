@@ -96,6 +96,20 @@ public class EstimateService {
                 );
     }
 
+    public PaginatedResponse<EstimateResponseDto> getEstimates(int pageNo){
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
+
+        Page<EstimateResponseDto> page = estimateRepository.findEstimates(pageable);
+
+        return new PaginatedResponse<>(
+                page.getContent(),
+                pageNo,
+                page.getTotalPages(),
+                page.getTotalElements()
+        );
+    }
+
 
     private Estimate fromDto(EstimateRequestDto dto){
         Estimate estimate = new Estimate();

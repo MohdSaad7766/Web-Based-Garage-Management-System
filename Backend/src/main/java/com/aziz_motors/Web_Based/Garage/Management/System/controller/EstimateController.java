@@ -35,8 +35,8 @@ public class EstimateController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public void getEstimates(@PathVariable int pageNo){
-
+    public ResponseEntity<PaginatedResponse<EstimateResponseDto>> getEstimates(@PathVariable int pageNo){
+        return ResponseEntity.ok(estimateService.getEstimates(pageNo));
     }
 
     public void updateEstimate(){
