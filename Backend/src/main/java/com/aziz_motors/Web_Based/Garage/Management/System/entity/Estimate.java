@@ -34,7 +34,7 @@ public class Estimate {
     private EstimateStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -51,7 +51,8 @@ public class Estimate {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal grandTotal = BigDecimal.ZERO;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
     @CreationTimestamp

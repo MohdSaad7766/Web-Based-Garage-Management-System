@@ -118,6 +118,37 @@ public class EstimateService {
         return estimateRepository.save(estimate).getId();
     }
 
+    @Transactional
+    public UUID updateEstimate(UUID estimateId, EstimateRequestDto dto){
+        Estimate estimate = getEstimateById(estimateId);
+        fromDto(dto, estimate);
+
+        return estimateRepository.save(estimate).getId();
+    }
+
+
+    private void fromDto(EstimateRequestDto dto, Estimate estimate){
+
+        List<EstimateItem> newItems = fromDto(dto.getEstimateItems());
+
+        // get existing collection
+        List<EstimateItem> existingItems = estimate.getEstimateItems();
+
+        // remove old items
+        existingItems.clear();
+
+        // add new items
+        for(EstimateItem item : newItems){
+            item.setEstimate(estimate);
+            existingItems.add(item);
+        }
+
+        estimate.setNotes(dto.getNotes());
+        estimate.setIssueDate(dto.getIssueDate());
+        estimate.setValidUntil(dto.getValidUntil());
+
+        estimate.setGrandTotal(calculateGrandTotal(existingItems));
+    }
 
     private Estimate fromDto(EstimateRequestDto dto){
         Estimate estimate = new Estimate();
@@ -141,6 +172,7 @@ public class EstimateService {
 
         return estimate;
     }
+
 
     private List<EstimateItem> fromDto(List<EstimateItemRequestDto> dtos){
         List<EstimateItem> items = new ArrayList<>();

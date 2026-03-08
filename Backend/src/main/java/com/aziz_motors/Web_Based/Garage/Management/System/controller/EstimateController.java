@@ -45,8 +45,9 @@ public class EstimateController {
         return ResponseEntity.ok(estimateService.updateEstimateStatus(estimateId, status));
     }
 
-    public void updateEstimate(){
-
+    @PutMapping("/update/{estimateId}")
+    public ResponseEntity<UUID> updateEstimate(@PathVariable UUID estimateId, @RequestBody EstimateRequestDto dto){
+        return ResponseEntity.ok(estimateService.updateEstimate(estimateId, dto));
     }
 
     public void deleteEstimate(){
