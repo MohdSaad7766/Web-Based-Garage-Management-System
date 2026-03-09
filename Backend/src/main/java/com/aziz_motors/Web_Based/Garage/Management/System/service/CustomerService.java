@@ -67,11 +67,16 @@ public class CustomerService {
     }
 
 
-    public PaginatedResponse<CustomerResponseDto> getCustomers(int pageNo){
+    public PaginatedResponse<CustomerResponseDto> getCustomers(int pageNo, String name, String email, String mobileNumber, String address){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
-        Page<CustomerResponseDto> page = customerRepository.findAllByPage(pageable);
+        Page<CustomerResponseDto> page = customerRepository.findAllByPage(
+                pageable,
+                name,
+                email,
+                mobileNumber,
+                address);
 
         return new PaginatedResponse<>(
                 page.getContent(),

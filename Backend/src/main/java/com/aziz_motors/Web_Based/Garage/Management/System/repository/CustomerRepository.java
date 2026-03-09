@@ -25,6 +25,21 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
                 c.address
             )
             FROM Customer c
+            
+            WHERE
+                (:name IS NULL OR LOWER(c.name) LIKE CONCAT('%', LOWER( CAST(:name AS text)), '%'))
+            AND
+                (:email IS NULL OR LOWER(c.email) LIKE CONCAT('%', LOWER( CAST(:email AS text)), '%'))
+            AND
+                (:mobileNumber IS NULL OR LOWER(c.mobileNumber) LIKE CONCAT('%', LOWER( CAST(:mobileNumber AS text)), '%'))
+            AND
+                (:address IS NULL OR LOWER(c.address) LIKE CONCAT('%', LOWER( CAST(:address AS text)), '%'))
             """)
-    Page<CustomerResponseDto> findAllByPage(Pageable pageable);
+    Page<CustomerResponseDto> findAllByPage(
+            Pageable pageable,
+            String name,
+            String email,
+            String mobileNumber,
+            String address
+    );
 }

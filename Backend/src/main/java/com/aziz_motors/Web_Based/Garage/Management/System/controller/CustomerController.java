@@ -33,8 +33,20 @@ public class CustomerController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public ResponseEntity<PaginatedResponse<CustomerResponseDto>> getCustomers(@PathVariable int pageNo){
-        return ResponseEntity.ok(customerService.getCustomers(pageNo));
+    public ResponseEntity<PaginatedResponse<CustomerResponseDto>> getCustomers(
+            @PathVariable int pageNo,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String mobileNumber,
+            @RequestParam(required = false) String address
+            ){
+        return ResponseEntity.ok(customerService.getCustomers(
+                pageNo,
+                name,
+                email,
+                mobileNumber,
+                address
+        ));
     }
 
     public void updateCustomer(){
