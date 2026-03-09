@@ -1,5 +1,6 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.ProductType;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.ProductRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,8 +48,30 @@ public class ProductController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public ResponseEntity<PaginatedResponse<ProductResponseDto>> getProducts(@PathVariable int pageNo){
-        return ResponseEntity.ok(productService.getProducts(pageNo));
+    public ResponseEntity<PaginatedResponse<ProductResponseDto>> getProducts(
+            @PathVariable int pageNo,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) ProductType type,
+            @RequestParam(required = false) BigDecimal basePrice,
+            @RequestParam(required = false) BigDecimal taxPercentage,
+            @RequestParam(required = false) String unit,
+            @RequestParam(required = false) String manufacturer,
+            @RequestParam(required = false) String hsnCode,
+            @RequestParam(required = false) String partNumber,
+            @RequestParam(required = false, defaultValue = "true") boolean active
+    ){
+        return ResponseEntity.ok(productService.getProducts(
+                pageNo,
+                name,
+                type,
+                basePrice,
+                taxPercentage,
+                unit,
+                manufacturer,
+                hsnCode,
+                partNumber,
+                active
+        ));
     }
 
     public void updateProduct(){

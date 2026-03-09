@@ -1,6 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.service;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Product;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.ProductType;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ProductAlreadyExistsException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.ProductRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -46,11 +48,32 @@ public class ProductService {
         return toDto(product);
     }
 
-    public PaginatedResponse<ProductResponseDto> getProducts(int pageNo){
+    public PaginatedResponse<ProductResponseDto> getProducts(
+            int pageNo,
+            String name,
+            ProductType type,
+            BigDecimal basePrice,
+            BigDecimal taxPercentage,
+            String unit,
+            String manufacturer,
+            String hsnCode,
+            String partNumber,
+            boolean active
+    ){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
-        Page<ProductResponseDto> page = productRepository.findAllByPage(pageable);
+        Page<ProductResponseDto> page = productRepository.findAllByPage(
+                pageable,
+                name,
+                type,
+                basePrice,
+                taxPercentage,
+                unit,
+                manufacturer,
+                hsnCode,
+                partNumber,
+                active);
 
         return new PaginatedResponse<>(
                 page.getContent(),
