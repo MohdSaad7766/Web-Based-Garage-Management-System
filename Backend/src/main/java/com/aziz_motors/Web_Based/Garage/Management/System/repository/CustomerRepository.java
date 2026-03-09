@@ -16,7 +16,7 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
     Optional<Customer> findByEmail(String email);
 
 
-    @Query("""
+    @Query(value = """
             Select new com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto(
                 c.id,
                 c.name,
@@ -27,6 +27,18 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
             FROM Customer c
             
             WHERE
+                (:name IS NULL OR LOWER(c.name) LIKE CONCAT('%', LOWER( CAST(:name AS text)), '%'))
+            AND
+                (:email IS NULL OR LOWER(c.email) LIKE CONCAT('%', LOWER( CAST(:email AS text)), '%'))
+            AND
+                (:mobileNumber IS NULL OR LOWER(c.mobileNumber) LIKE CONCAT('%', LOWER( CAST(:mobileNumber AS text)), '%'))
+            AND
+                (:address IS NULL OR LOWER(c.address) LIKE CONCAT('%', LOWER( CAST(:address AS text)), '%'))
+            """
+    ,countQuery = """
+            SELECT COUNT(c) 
+            FROM Customer c
+             WHERE
                 (:name IS NULL OR LOWER(c.name) LIKE CONCAT('%', LOWER( CAST(:name AS text)), '%'))
             AND
                 (:email IS NULL OR LOWER(c.email) LIKE CONCAT('%', LOWER( CAST(:email AS text)), '%'))

@@ -58,11 +58,49 @@ public class DealerService {
 
 
 
-    public PaginatedResponse<DealerResponseDto> getDealers(int pageNo){
+    public PaginatedResponse<DealerResponseDto> getDealers(
+            int pageNo,
+            String name,
+            String gstNumber,
+            String panNumber,
+            String address,
+            String city,
+            String state,
+            String zipcode,
+            String country,
+            String contactPersonName,
+            String contactPersonPhone,
+            String contactPersonEmail,
+            String phoneNumber,
+            String website,
+            String email,
+            String bankName,
+            String bankAccountNumber,
+            String bankIFSC
+    ){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
-        Page<DealerResponseDto> page = dealerRepository.findAllByPage(pageable);
+        Page<DealerResponseDto> page = dealerRepository.findAllByPage(
+                pageable,
+                name,
+                gstNumber,
+                panNumber,
+                address,
+                city,
+                state,
+                zipcode,
+                country,
+                contactPersonName,
+                contactPersonPhone,
+                contactPersonEmail,
+                phoneNumber,
+                website,
+                email,
+                bankName,
+                bankAccountNumber,
+                bankIFSC
+        );
 
 
         return new PaginatedResponse<>(

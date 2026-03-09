@@ -30,8 +30,46 @@ public class DealerController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public ResponseEntity<PaginatedResponse<DealerResponseDto>> getDealers(@PathVariable int pageNo){
-        return ResponseEntity.ok(dealerService.getDealers(pageNo));
+    public ResponseEntity<PaginatedResponse<DealerResponseDto>> getDealers(
+            @PathVariable int pageNo,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String gstNumber,
+            @RequestParam(required = false) String panNumber,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String zipcode,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String contactPersonName,
+            @RequestParam(required = false) String contactPersonPhone,
+            @RequestParam(required = false) String contactPersonEmail,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String website,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String bankName,
+            @RequestParam(required = false) String bankAccountNumber,
+            @RequestParam(required = false) String bankIFSC
+    ){
+        return ResponseEntity.ok(dealerService.getDealers(
+                pageNo,
+                name,
+                gstNumber,
+                panNumber,
+                address,
+                city,
+                state,
+                zipcode,
+                country,
+                contactPersonName,
+                contactPersonPhone,
+                contactPersonEmail,
+                phoneNumber,
+                website,
+                email,
+                bankName,
+                bankAccountNumber,
+                bankIFSC
+        ));
     }
 
     public void updateDealer(){
