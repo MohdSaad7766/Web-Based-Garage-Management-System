@@ -1,6 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.service;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.AppointmentStatus;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.FullAppointmentResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
@@ -52,6 +53,26 @@ public class MailService {
         }
     }
 
+    public void sendEstimateViaMail(EstimateResponseDto dto){
+        String email = dto.getCustomer().getEmail();
+        String subject = "Estimate";
+        String html = getHtmlText(dto);
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+            helper.setFrom("no-reply@azizmotors.com");
+            helper.setTo(email);
+            helper.setSubject(subject);
+            helper.setText(html, true);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            System.err.println("Email failed for " + email);
+        }
+
+    }
 
     private String getSubjectByStatus(AppointmentStatus status) {
         return switch (status) {
@@ -64,6 +85,9 @@ public class MailService {
         };
     }
 
+    private String getHtmlText(EstimateResponseDto dto){
+        return "Estimate Mail";
+    }
     private String getHtmlText(FullAppointmentResponseDto appointment, AppointmentStatus status) {
 
         CustomerResponseDto customer = appointment.getCustomer();

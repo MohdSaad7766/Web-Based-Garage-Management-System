@@ -36,8 +36,25 @@ public class EstimateController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public ResponseEntity<PaginatedResponse<EstimateResponseDto>> getEstimates(@PathVariable int pageNo){
-        return ResponseEntity.ok(estimateService.getEstimates(pageNo));
+    public ResponseEntity<PaginatedResponse<EstimateResponseDto>> getEstimates(
+            @PathVariable() int pageNo,
+            @RequestParam(required = false) String estimateNumber,
+            @RequestParam(required = false) EstimateStatus status,
+            @RequestParam(required = false) String customerName,
+            @RequestParam(required = false) String customerAddress,
+            @RequestParam(required = false) String vehicleManufacturerName,
+            @RequestParam(required = false) String vehicleModelName,
+            @RequestParam(required = false) String vehicleRegistrationNumber){
+        return ResponseEntity.ok(estimateService.getEstimates(
+                pageNo,
+                estimateNumber,
+                status,
+                customerName,
+                customerAddress,
+                vehicleManufacturerName,
+                vehicleModelName,
+                vehicleRegistrationNumber
+        ));
     }
 
     @PatchMapping("/update-status/{estimateId}")
@@ -65,6 +82,6 @@ public class EstimateController {
     }
 
     public void generateEstimatePdf(){
-        
+
     }
 }

@@ -96,11 +96,26 @@ public class EstimateService {
                 );
     }
 
-    public PaginatedResponse<EstimateResponseDto> getEstimates(int pageNo){
+    public PaginatedResponse<EstimateResponseDto> getEstimates(int pageNo,
+                                                               String estimateNumber,
+                                                               EstimateStatus status,
+                                                               String customerName,
+                                                               String customerAddress,
+                                                               String vehicleManufacturerName,
+                                                               String vehicleModelName,
+                                                               String vehicleRegistrationNumber){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
-        Page<EstimateResponseDto> page = estimateRepository.findEstimates(pageable);
+        Page<EstimateResponseDto> page = estimateRepository.findEstimates(
+                pageable,
+                estimateNumber,
+                status,
+                customerName,
+                customerAddress,
+                vehicleManufacturerName,
+                vehicleModelName,
+                vehicleRegistrationNumber);
 
         return new PaginatedResponse<>(
                 page.getContent(),

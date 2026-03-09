@@ -1,6 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.repository;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Estimate;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.EstimateStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -91,13 +92,52 @@ public interface EstimateRepository extends JpaRepository<Estimate, UUID> {
         FROM Estimate e
         JOIN e.customer c
         JOIN e.vehicle v
+        WHERE 
+                ( :estimateNumber IS NULL OR LOWER(e.estimateNumber) LIKE CONCAT('%',LOWER(CAST( :estimateNumber AS text)), '%') )
+            AND
+                ( :status IS NULL OR e.status = :status )
+            AND 
+                ( :customerName IS NULL OR LOWER(c.name) LIKE CONCAT('%',LOWER(CAST( :customerName AS text )), '%') )
+            AND
+                ( :customerAddress IS NULL OR LOWER(c.address) LIKE CONCAT('%',LOWER(CAST(:customerAddress AS text)), '%') )
+            AND
+                ( :vehicleManufacturerName IS NULL OR LOWER(v.manufacturerName) LIKE CONCAT('%',LOWER(CAST(:vehicleManufacturerName AS text)), '%') )
+            AND
+                ( :vehicleModelName IS NULL OR LOWER(v.modelName) LIKE CONCAT('%',LOWER(CAST(:vehicleModelName AS text)), '%') )
+            AND
+                ( :vehicleRegistrationNumber IS NULL OR LOWER(v.registrationNumber) LIKE CONCAT('%',LOWER(CAST(:vehicleRegistrationNumber AS text)), '%') )
+
         """,
             countQuery = """
         SELECT COUNT(e)
         FROM Estimate e
+        JOIN e.customer c
+        JOIN e.vehicle v
+        WHERE 
+                ( :estimateNumber IS NULL OR LOWER(e.estimateNumber) LIKE CONCAT('%',LOWER(CAST( :estimateNumber AS text)), '%') )
+            AND
+                ( :status IS NULL OR e.status = :status )
+            AND 
+                ( :customerName IS NULL OR LOWER(c.name) LIKE CONCAT('%',LOWER(CAST( :customerName AS text )), '%') )
+            AND
+                ( :customerAddress IS NULL OR LOWER(c.address) LIKE CONCAT('%',LOWER(CAST(:customerAddress AS text)), '%') )
+            AND
+                ( :vehicleManufacturerName IS NULL OR LOWER(v.manufacturerName) LIKE CONCAT('%',LOWER(CAST(:vehicleManufacturerName AS text)), '%') )
+            AND
+                ( :vehicleModelName IS NULL OR LOWER(v.modelName) LIKE CONCAT('%',LOWER(CAST(:vehicleModelName AS text)), '%') )
+            AND
+                ( :vehicleRegistrationNumber IS NULL OR LOWER(v.registrationNumber) LIKE CONCAT('%',LOWER(CAST(:vehicleRegistrationNumber AS text)), '%') )
+
         """
     )
     Page<EstimateResponseDto> findEstimates(
-            Pageable pageable
+            Pageable pageable,
+            String estimateNumber,
+            EstimateStatus status,
+            String customerName,
+            String customerAddress,
+            String vehicleManufacturerName,
+            String vehicleModelName,
+            String vehicleRegistrationNumber
     );
 }
