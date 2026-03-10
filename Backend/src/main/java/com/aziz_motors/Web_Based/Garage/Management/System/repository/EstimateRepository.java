@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Repository
@@ -106,7 +107,11 @@ public interface EstimateRepository extends JpaRepository<Estimate, UUID> {
                 ( :vehicleModelName IS NULL OR LOWER(v.modelName) LIKE CONCAT('%',LOWER(CAST(:vehicleModelName AS text)), '%') )
             AND
                 ( :vehicleRegistrationNumber IS NULL OR LOWER(v.registrationNumber) LIKE CONCAT('%',LOWER(CAST(:vehicleRegistrationNumber AS text)), '%') )
-
+            AND
+                ( :minGrandTotal IS NULL OR e.grandTotal >= :minGrandTotal )
+            AND
+                ( :maxGrandTotal IS NULL OR e.grandTotal <= :maxGrandTotal )
+                
         """,
             countQuery = """
         SELECT COUNT(e)
@@ -127,6 +132,10 @@ public interface EstimateRepository extends JpaRepository<Estimate, UUID> {
                 ( :vehicleModelName IS NULL OR LOWER(v.modelName) LIKE CONCAT('%',LOWER(CAST(:vehicleModelName AS text)), '%') )
             AND
                 ( :vehicleRegistrationNumber IS NULL OR LOWER(v.registrationNumber) LIKE CONCAT('%',LOWER(CAST(:vehicleRegistrationNumber AS text)), '%') )
+            AND
+                ( :minGrandTotal IS NULL OR e.grandTotal >= :minGrandTotal )
+            AND
+                ( :maxGrandTotal IS NULL OR e.grandTotal <= :maxGrandTotal )
 
         """
     )
@@ -138,6 +147,8 @@ public interface EstimateRepository extends JpaRepository<Estimate, UUID> {
             String customerAddress,
             String vehicleManufacturerName,
             String vehicleModelName,
-            String vehicleRegistrationNumber
+            String vehicleRegistrationNumber,
+            BigDecimal minGrandTotal,
+            BigDecimal maxGrandTotal
     );
 }

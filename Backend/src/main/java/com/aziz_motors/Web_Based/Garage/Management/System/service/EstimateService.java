@@ -103,7 +103,10 @@ public class EstimateService {
                                                                String customerAddress,
                                                                String vehicleManufacturerName,
                                                                String vehicleModelName,
-                                                               String vehicleRegistrationNumber){
+                                                               String vehicleRegistrationNumber,
+                                                               BigDecimal minGrandTotal,
+                                                               BigDecimal maxGrandTotal
+    ){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
@@ -115,7 +118,9 @@ public class EstimateService {
                 customerAddress,
                 vehicleManufacturerName,
                 vehicleModelName,
-                vehicleRegistrationNumber);
+                vehicleRegistrationNumber,
+                minGrandTotal,
+                maxGrandTotal);
 
         return new PaginatedResponse<>(
                 page.getContent(),

@@ -2,6 +2,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.service;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Dealer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.PaymentReceipt;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.PaymentType;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.PaymentReceiptRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,11 +79,30 @@ public class PaymentReceiptService {
          return new PaginatedResponse<>(page.getContent(), pageNo, page.getTotalPages(), page.getTotalElements());
     }
 
-    public PaginatedResponse<PaymentReceiptResponseDto> getPayments(int pageNo){
+    public PaginatedResponse<PaymentReceiptResponseDto> getPayments(
+            int pageNo,
+            String receiptNumber,
+            LocalDate paymentDate,
+            BigDecimal minAmount,
+            BigDecimal maxAmount,
+            String amountInWords,
+            String payeeName,
+            String payerName,
+            PaymentType paymentType
+    ){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
-        Page<PaymentReceiptResponseDto> page = paymentReceiptRepository.findPaymentReceipts(pageable);
+        Page<PaymentReceiptResponseDto> page = paymentReceiptRepository.findPaymentReceipts(
+                pageable,
+                receiptNumber,
+                paymentDate,
+                minAmount,
+                maxAmount,
+                amountInWords,
+                payeeName,
+                payerName,
+                paymentType);
 
         return new PaginatedResponse<>(page.getContent(), pageNo, page.getTotalPages(), page.getTotalElements());
     }

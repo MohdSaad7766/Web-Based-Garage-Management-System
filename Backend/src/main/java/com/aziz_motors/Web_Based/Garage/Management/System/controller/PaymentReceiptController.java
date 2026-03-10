@@ -1,5 +1,6 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.PaymentType;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -38,8 +41,26 @@ public class PaymentReceiptController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public ResponseEntity<PaginatedResponse<PaymentReceiptResponseDto>> getPaymentReceipts(@PathVariable int pageNo){
-        return ResponseEntity.ok(paymentReceiptService.getPayments(pageNo));
+    public ResponseEntity<PaginatedResponse<PaymentReceiptResponseDto>> getPaymentReceipts(
+            @PathVariable int pageNo,
+            @RequestParam(required = false) String receiptNumber,
+            @RequestParam(required = false) LocalDate paymentDate,
+            @RequestParam(required = false) BigDecimal minAmount,
+            @RequestParam(required = false) BigDecimal maxAmount,
+            @RequestParam(required = false) String amountInWords,
+            @RequestParam(required = false) String payeeName,
+            @RequestParam(required = false) String payerName,
+            @RequestParam(required = false) PaymentType paymentType){
+        return ResponseEntity.ok(paymentReceiptService.getPayments(
+                pageNo,
+                receiptNumber,
+                paymentDate,
+                minAmount,
+                maxAmount,
+                amountInWords,
+                payeeName,
+                payerName,
+                paymentType));
     }
 
     public void updatePaymentReceipt(){

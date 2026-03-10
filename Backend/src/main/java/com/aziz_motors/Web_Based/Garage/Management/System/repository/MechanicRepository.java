@@ -37,7 +37,7 @@ public interface MechanicRepository extends JpaRepository<Mechanic, UUID> {
         AND (:minSalary IS NULL OR m.salary >= :minSalary)
         AND (:maxSalary IS NULL OR m.salary <= :maxSalary)
         AND (:address IS NULL OR LOWER(m.address) LIKE CONCAT('%', LOWER(CAST(:address AS text)), '%'))
-        AND m.joinDate = COALESCE(:joinDate, m.joinDate)
+        AND (cast(:joinDate as LocalDate) IS NULL OR m.joinDate = :joinDate)
         """,
             countQuery = """
         SELECT COUNT(m)
@@ -49,7 +49,7 @@ public interface MechanicRepository extends JpaRepository<Mechanic, UUID> {
         AND (:minSalary IS NULL OR m.salary >= :minSalary)
         AND (:maxSalary IS NULL OR m.salary <= :maxSalary)
         AND (:address IS NULL OR LOWER(m.address) LIKE CONCAT('%', LOWER(CAST(:address AS text)), '%'))
-        AND m.joinDate = COALESCE(:joinDate, m.joinDate)
+        AND (cast(:joinDate as LocalDate) IS NULL OR m.joinDate = :joinDate)
         """)
     Page<MechanicResponseDto> findAllByPage(
             Pageable pageable,

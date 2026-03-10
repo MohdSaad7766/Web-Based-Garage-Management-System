@@ -8,6 +8,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.service.EstimateServic
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @RestController
@@ -44,7 +45,9 @@ public class EstimateController {
             @RequestParam(required = false) String customerAddress,
             @RequestParam(required = false) String vehicleManufacturerName,
             @RequestParam(required = false) String vehicleModelName,
-            @RequestParam(required = false) String vehicleRegistrationNumber){
+            @RequestParam(required = false) String vehicleRegistrationNumber,
+            @RequestParam(required = false) BigDecimal minGrandTotal,
+            @RequestParam(required = false) BigDecimal maxGrandTotal){
         return ResponseEntity.ok(estimateService.getEstimates(
                 pageNo,
                 estimateNumber,
@@ -53,7 +56,9 @@ public class EstimateController {
                 customerAddress,
                 vehicleManufacturerName,
                 vehicleModelName,
-                vehicleRegistrationNumber
+                vehicleRegistrationNumber,
+                minGrandTotal,
+                maxGrandTotal
         ));
     }
 

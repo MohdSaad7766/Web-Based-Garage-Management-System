@@ -37,7 +37,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             AND
                 ( :type IS NULL OR p.type = :type )
             AND
-                ( :basePrice IS NULL OR p.basePrice = :basePrice )
+                ( :minBasePrice IS NULL OR p.basePrice >= :minBasePrice )
+            AND
+                ( :maxBasePrice IS NULL OR p.basePrice <= :maxBasePrice )
             AND
                 ( :taxPercentage IS NULL OR p.taxPercentage = :taxPercentage )
             AND
@@ -58,8 +60,10 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
                 ( :name IS NULL OR LOWER(p.name) LIKE CONCAT('%', LOWER(CAST( :name AS text )), '%') )
             AND
                 ( :type IS NULL OR p.type = :type )
+             AND
+                ( :minBasePrice IS NULL OR p.basePrice >= :minBasePrice )
             AND
-                ( :basePrice IS NULL OR p.basePrice = :basePrice )
+                ( :maxBasePrice IS NULL OR p.basePrice <= :maxBasePrice )
             AND
                 ( :taxPercentage IS NULL OR p.taxPercentage = :taxPercentage )
             AND
@@ -77,7 +81,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             Pageable pageable,
             String name,
             ProductType type,
-            BigDecimal basePrice,
+            BigDecimal minBasePrice,
+            BigDecimal maxBasePrice,
             BigDecimal taxPercentage,
             String unit,
             String manufacturer,
