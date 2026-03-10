@@ -7,6 +7,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.service.MechanicServic
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -29,8 +30,26 @@ public class MechanicController {
     }
 
     @GetMapping("/get-all/{pageNo}")
-    public ResponseEntity<PaginatedResponse<MechanicResponseDto>> getMechanics(@PathVariable int pageNo){
-        return ResponseEntity.ok(mechanicService.getMechanics(pageNo));
+    public ResponseEntity<PaginatedResponse<MechanicResponseDto>> getMechanics(
+            @PathVariable int pageNo,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String mobileNumber,
+            @RequestParam(required = false) Double minSalary,
+            @RequestParam(required = false) Double maxSalary,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) LocalDate joinDate
+    ){
+        return ResponseEntity.ok(mechanicService.getMechanics(
+                pageNo,
+                name,
+                email,
+                mobileNumber,
+                minSalary,
+                maxSalary,
+                address,
+                joinDate
+        ));
     }
 
     public void updateMechanic(){

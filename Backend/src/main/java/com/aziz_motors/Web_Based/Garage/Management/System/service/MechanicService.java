@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -44,11 +45,29 @@ public class MechanicService {
 
     }
 
-    public PaginatedResponse<MechanicResponseDto> getMechanics(int pageNo){
+    public PaginatedResponse<MechanicResponseDto> getMechanics(
+            int pageNo,
+            String name,
+            String email,
+            String mobileNumber,
+            Double minSalary,
+            Double maxSalary,
+            String address,
+            LocalDate joinDate
+    ){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
-        Page<MechanicResponseDto> page = mechanicRepository.findAllByPage(pageable);
+        Page<MechanicResponseDto> page = mechanicRepository.findAllByPage(
+                pageable,
+                name,
+                email,
+                mobileNumber,
+                minSalary,
+                maxSalary,
+                address,
+                joinDate
+        );
 
         return new PaginatedResponse<>(
                 page.getContent(),

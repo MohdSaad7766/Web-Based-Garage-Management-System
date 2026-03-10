@@ -17,7 +17,7 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findByNameAndManufacturer(String name, String manufacturer);
 
-    @Query("""
+    @Query(value = """
             SELECT new com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto
             (
                 p.id,
@@ -31,6 +31,28 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
                 p.partNumber,
                 p.active
             )
+            FROM Product p
+            WHERE
+                ( :name IS NULL OR LOWER(p.name) LIKE CONCAT('%', LOWER(CAST( :name AS text )), '%') )
+            AND
+                ( :type IS NULL OR p.type = :type )
+            AND
+                ( :basePrice IS NULL OR p.basePrice = :basePrice )
+            AND
+                ( :taxPercentage IS NULL OR p.taxPercentage = :taxPercentage )
+            AND
+                ( :unit IS NULL OR LOWER(p.unit) LIKE CONCAT('%', LOWER(CAST( :unit AS text )), '%') )
+            AND
+                ( :manufacturer IS NULL OR LOWER(p.manufacturer) LIKE CONCAT('%', LOWER(CAST( :manufacturer AS text )), '%') )
+            AND
+                ( :hsnCode IS NULL OR LOWER(p.hsnCode) LIKE CONCAT('%', LOWER(CAST( :hsnCode AS text )), '%') )
+            AND
+                ( :partNumber IS NULL OR LOWER(p.partNumber) LIKE CONCAT('%', LOWER(CAST( :partNumber AS text )), '%') )
+            AND
+                ( :active IS NULL OR p.active = :active )
+            """,
+    countQuery = """
+            SELECT COUNT(p)
             FROM Product p
             WHERE
                 ( :name IS NULL OR LOWER(p.name) LIKE CONCAT('%', LOWER(CAST( :name AS text )), '%') )
