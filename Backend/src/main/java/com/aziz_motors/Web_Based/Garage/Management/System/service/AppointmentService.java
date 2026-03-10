@@ -4,6 +4,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.entity.Appointment;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Customer;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.AppointmentStatus;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.ServiceType;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.DuplicateAppointmentException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.VehicleAlreadyAssignedException;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -113,20 +115,24 @@ public class AppointmentService {
     }
 
 
-    public PaginatedResponse<FullAppointmentResponseDto> getAppointments(int pageNo){
+    public PaginatedResponse<FullAppointmentResponseDto> getAppointments(
+            int pageNo,
+            LocalDateTime dateTime,
+            ServiceType serviceType,
+            AppointmentStatus status){
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, sort);
 
-        Page<Appointment> page = appointmentRepository.findAll(pageable);
+        Page<FullAppointmentResponseDto> page = appointmentRepository.findByFiltering(
+                pageable,
+                dateTime,
+                serviceType,
+                status
+        );
 
-        List<FullAppointmentResponseDto> content = new ArrayList<>();
-
-        for(Appointment appointment : page.getContent()){
-            content.add(toDto(appointment));
-        }
 
         return new PaginatedResponse<>(
-                content,
+                page.getContent(),
                 pageNo,
                 page.getTotalPages(),
                 page.getTotalElements()
