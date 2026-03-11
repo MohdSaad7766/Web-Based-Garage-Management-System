@@ -53,11 +53,11 @@ public class CustomerController {
 
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteCustomerById(@PathVariable UUID id){
-//
-//        return ResponseEntity.ok("Customer with id-"+id+" has been deleted successful.");
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCustomerById(@PathVariable UUID id){
+        customerService.deleteCustomer(id);
+        return ResponseEntity.ok("Customer with id-"+id+" has been deleted successful.");
+    }
 
 
 }

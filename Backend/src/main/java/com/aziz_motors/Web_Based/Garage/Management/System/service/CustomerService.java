@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,11 @@ public class CustomerService {
                 page.getTotalElements());
     }
 
-
+    @Transactional
+    public void deleteCustomer(UUID id){
+        Customer customer = getCustomerById(id);
+        customerRepository.delete(customer);
+    }
     private FullCustomerResponseDto toFullCustomerResponseDto(Customer customer){
         FullCustomerResponseDto dto = new FullCustomerResponseDto();
 

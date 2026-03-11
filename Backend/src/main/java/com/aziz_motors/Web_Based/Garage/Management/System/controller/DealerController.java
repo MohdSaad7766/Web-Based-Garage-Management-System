@@ -76,7 +76,8 @@ public class DealerController {
 
     }
 
-    public void deleteDealer(){
-
+    @DeleteMapping("/id")
+    public ResponseEntity<String> deleteDealer(@PathVariable UUID id){
+        return ResponseEntity.ok("Customer with id-"+id+" has been deleted successful.");
     }
 }
