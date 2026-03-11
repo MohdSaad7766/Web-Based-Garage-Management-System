@@ -25,8 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -107,11 +105,18 @@ public class AppointmentService {
     }
 
 
-    public FullAppointmentResponseDto getAppointmentById(UUID id){
+    public FullAppointmentResponseDto getAppointmentResponseById(UUID id){
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(()->
                 new ResourceWithProvidedIdNotFoundException("Appointment with id-"+id + " not found."));
 
         return toDto(appointment);
+    }
+
+    public Appointment getAppointmentById(UUID id){
+        return appointmentRepository.findById(id).orElseThrow(()->
+                new ResourceWithProvidedIdNotFoundException("Appointment with id-"+id + " not found."));
+
+
     }
 
 
@@ -139,6 +144,7 @@ public class AppointmentService {
         );
     }
 
+    @Transactional
     public void updateAppointmentStatus(UUID id, AppointmentStatus status, boolean sentMail){
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(()->
@@ -152,6 +158,13 @@ public class AppointmentService {
             mailService.sendAppointmentMail(toDto(appointment), status);
         }
     }
+
+    @Transactional
+    public void deleteBydId(UUID id){
+        Appointment appointment = getAppointmentById(id);
+        appointmentRepository.delete(appointment);
+    }
+
 
     private FullAppointmentResponseDto toDto(Appointment appointment){
         Customer customer = appointment.getCustomer();

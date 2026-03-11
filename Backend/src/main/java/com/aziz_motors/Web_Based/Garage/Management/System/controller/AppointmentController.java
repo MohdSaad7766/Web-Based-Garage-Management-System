@@ -34,7 +34,7 @@ public class AppointmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FullAppointmentResponseDto> getAppointmentById(@PathVariable UUID id){
-        return ResponseEntity.ok(appointmentService.getAppointmentById(id));
+        return ResponseEntity.ok(appointmentService.getAppointmentResponseById(id));
     }
 
 
@@ -67,8 +67,9 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAppointment(@PathVariable UUID id){
-        
+    public ResponseEntity<String> deleteAppointmentById(@PathVariable UUID id){
+        appointmentService.deleteBydId(id);
+        return ResponseEntity.ok("Appointment with id-"+id+" has been deleted successful.");
     }
 }
 

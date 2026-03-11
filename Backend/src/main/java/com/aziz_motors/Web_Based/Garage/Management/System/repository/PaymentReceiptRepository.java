@@ -125,20 +125,5 @@ public interface PaymentReceiptRepository extends JpaRepository<PaymentReceipt, 
             PaymentType paymentType
     );
 
-    /* WHERE
-                (:receiptNumber IS NULL OR LOWER(pr.receiptNumber) LIKE CONCAT('%', LOWER(CAST(:receiptNumber AS text)), '%'))
-            AND
-                (cast(:paymentDate as LocalDate) IS NULL OR pr.paymentDate = :paymentDate)
-            AND
-                (:minAmount IS NULL OR pr.amount >= :minAmount)
-            AND
-                (:maxAmount IS NULL OR pr.amount <= :maxAmount)
-            AND
-                (:amountInWords IS NULL OR LOWER(pr.amountInWords) LIKE CONCAT('%', LOWER(CAST(:amountInWords AS text))
-            AND
-                (:payeeName IS NULL OR LOWER(pr.payeeName) LIKE CONCAT('%', LOWER(CAST(:payeeName AS text))
-            AND
-                (:payerName IS NULL OR LOWER(pr.payerName) LIKE CONCAT('%', LOWER(CAST(:payerName AS text))
-            AND
-                (:paymentType IS NULL OR pr.paymentType = :paymentType)*/
+
 }

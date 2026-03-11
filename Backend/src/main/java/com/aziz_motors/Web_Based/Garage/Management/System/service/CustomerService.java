@@ -84,6 +84,8 @@ public class CustomerService {
                 page.getTotalPages(),
                 page.getTotalElements());
     }
+
+
     private FullCustomerResponseDto toFullCustomerResponseDto(Customer customer){
         FullCustomerResponseDto dto = new FullCustomerResponseDto();
 
