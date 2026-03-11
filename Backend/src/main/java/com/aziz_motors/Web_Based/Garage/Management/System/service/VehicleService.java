@@ -58,6 +58,13 @@ public class VehicleService {
     }
 
 
+    @Transactional
+    public void deleteVehicle(UUID id){
+        Vehicle vehicle = getVehicleById(id);
+
+        vehicleRepository.delete(vehicle);
+    }
+
     private Vehicle fromDto(VehicleRequestDto dto) {
         Vehicle vehicle = new Vehicle();
 

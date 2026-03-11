@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -66,9 +65,14 @@ public class PaymentReceiptService {
     }
 
 
-    public PaymentReceiptResponseDto getPaymentReceiptById(UUID receiptId){
+    public PaymentReceiptResponseDto getPaymentReceiptResponseById(UUID receiptId){
         return paymentReceiptRepository.findPaymentReceiptById(receiptId).orElseThrow(()->new ResourceWithProvidedIdNotFoundException("PaymentReceipt with id-"+receiptId+" not found."));
     }
+
+    public PaymentReceipt getPaymentReceiptById(UUID receiptId){
+        return paymentReceiptRepository.findById(receiptId).orElseThrow(()->new ResourceWithProvidedIdNotFoundException("PaymentReceipt with id-"+receiptId+" not found."));
+    }
+
 
     public PaginatedResponse<PaymentReceiptResponseDto> getPaymentReceiptByDealerId(int pageNo,UUID dealerId){
         Sort sort = Sort.by("createdAt").descending();
@@ -105,5 +109,12 @@ public class PaymentReceiptService {
                 paymentType);
 
         return new PaginatedResponse<>(page.getContent(), pageNo, page.getTotalPages(), page.getTotalElements());
+    }
+
+    @Transactional
+    public void deleteReceipt(UUID id){
+        PaymentReceipt paymentReceipt = getPaymentReceiptById(id);
+
+        paymentReceiptRepository.delete(paymentReceipt);
     }
 }

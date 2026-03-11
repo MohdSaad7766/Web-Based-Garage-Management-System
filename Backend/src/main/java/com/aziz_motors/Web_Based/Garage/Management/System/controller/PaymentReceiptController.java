@@ -32,7 +32,7 @@ public class PaymentReceiptController {
 
     @GetMapping("/{receiptId}")
     public ResponseEntity<PaymentReceiptResponseDto> getPaymentReceiptById(@PathVariable UUID receiptId){
-        return ResponseEntity.ok(paymentReceiptService.getPaymentReceiptById(receiptId));
+        return ResponseEntity.ok(paymentReceiptService.getPaymentReceiptResponseById(receiptId));
     }
 
     @GetMapping("/get-all-by-dealer-id/{pageNo}")
@@ -67,7 +67,9 @@ public class PaymentReceiptController {
 
     }
 
-    public void deletePaymentReceipt(){
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePaymentReceipt(UUID id){
+        paymentReceiptService.deleteReceipt(id);
+        return ResponseEntity.ok("Payment Receipt with id"+id+ " has been deleted successful.");
     }
 }

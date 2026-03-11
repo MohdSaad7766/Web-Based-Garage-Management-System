@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -41,11 +42,16 @@ public class ProductService {
         return productRepository.save(product).getId();
     }
 
-    public ProductResponseDto getProductById(UUID id){
+    public ProductResponseDto getProductResponseById(UUID id){
         Product product = productRepository.findById(id).orElseThrow(()->
                 new ResourceWithProvidedIdNotFoundException());
 
         return toDto(product);
+    }
+
+    public Product getProductById(UUID id){
+        return productRepository.findById(id).orElseThrow(()->
+                new ResourceWithProvidedIdNotFoundException());
     }
 
     public PaginatedResponse<ProductResponseDto> getProducts(
@@ -83,6 +89,14 @@ public class ProductService {
                 page.getTotalPages(),
                 page.getTotalElements()
         );
+    }
+
+
+    @Transactional
+    public void deleteProduct(UUID id){
+        Product product = getProductById(id);
+
+        productRepository.delete(product);
     }
 
     private ProductResponseDto toDto(Product product){

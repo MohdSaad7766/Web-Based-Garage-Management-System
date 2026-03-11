@@ -26,4 +26,10 @@ public class VehicleController {
 
         return ResponseEntity.ok(new GeneralMessageResponse(true,"Vehicle Added Successfully..."));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteVehicle(UUID id){
+        vehicleService.deleteVehicle(id);
+        return ResponseEntity.ok("Vehicle with id"+id+ " has been deleted successful.");
+    }
 }

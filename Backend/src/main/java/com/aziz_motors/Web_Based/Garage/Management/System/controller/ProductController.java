@@ -1,7 +1,6 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.ProductType;
-import com.aziz_motors.Web_Based.Garage.Management.System.repository.ProductRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
@@ -44,7 +43,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDto> getProductById(@PathVariable UUID id){
-        return ResponseEntity.ok(productService.getProductById(id));
+        return ResponseEntity.ok(productService.getProductResponseById(id));
     }
 
     @GetMapping("/get-all/{pageNo}")
@@ -80,7 +79,9 @@ public class ProductController {
 
     }
 
-    public void deleteProduct(){
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(UUID id){
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("Product with id"+id+ " has been deleted successful.");
     }
 }
