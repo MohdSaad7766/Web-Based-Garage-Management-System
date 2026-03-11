@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -37,13 +38,20 @@ public class MechanicService {
         return mechanicRepository.save(mechanic).getId();
     }
 
-    public MechanicResponseDto getMechanicById(UUID id){
+    public MechanicResponseDto getMechanicResponseById(UUID id){
         Mechanic mechanic = mechanicRepository.findById(id).orElseThrow(()->
                 new ResourceWithProvidedIdNotFoundException("Mechanic with id-"+id+" not found..."));
 
         return toMechanicResponseDto(mechanic);
 
     }
+
+    public Mechanic getMechanicById(UUID id){
+        return mechanicRepository.findById(id).orElseThrow(()->
+                new ResourceWithProvidedIdNotFoundException("Mechanic with id-"+id+" not found..."));
+
+    }
+
 
     public PaginatedResponse<MechanicResponseDto> getMechanics(
             int pageNo,
@@ -75,6 +83,13 @@ public class MechanicService {
                 page.getTotalPages(),
                 page.getTotalElements()
         );
+    }
+
+    @Transactional
+    public void deleteMechanic(UUID id){
+        Mechanic mechanic =  getMechanicById(id);
+
+        mechanicRepository.delete(mechanic);
     }
 
     private MechanicResponseDto toMechanicResponseDto(Mechanic mechanic){

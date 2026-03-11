@@ -56,6 +56,11 @@ public class DealerService {
 
     }
 
+    @Transactional
+    public void deleteDealer(UUID id){
+        Dealer dealer = getDealerById(id);
+        dealerRepository.delete(dealer);
+    }
 
 
     public PaginatedResponse<DealerResponseDto> getDealers(

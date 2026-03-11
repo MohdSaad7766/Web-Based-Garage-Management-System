@@ -72,10 +72,10 @@ public class EstimateController {
         return ResponseEntity.ok(estimateService.updateEstimate(estimateId, dto));
     }
 
-    @DeleteMapping("/delete/{estimateId}")
-    public ResponseEntity<?> deleteEstimate(@PathVariable UUID estimateId){
-        estimateService.deleteEstimateById(estimateId);
-        return ResponseEntity.ok("Estimate with id"+estimateId+ " has been deleted successfully.");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteEstimate(@PathVariable UUID id){
+        estimateService.deleteEstimateById(id);
+        return ResponseEntity.ok("Estimate with id"+id+ " has been deleted successful.");
     }
 
     public void convertEstimateToInvoice(){

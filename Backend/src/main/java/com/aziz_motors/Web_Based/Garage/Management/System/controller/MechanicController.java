@@ -26,7 +26,7 @@ public class MechanicController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MechanicResponseDto> getMechanicById(@PathVariable UUID id){
-        return ResponseEntity.ok(mechanicService.getMechanicById(id));
+        return ResponseEntity.ok(mechanicService.getMechanicResponseById(id));
     }
 
     @GetMapping("/get-all/{pageNo}")
@@ -56,7 +56,9 @@ public class MechanicController {
 
     }
 
-    public void deleteMechanic(){
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMechanic(@PathVariable UUID id){
+        mechanicService.deleteMechanic(id);
+        return ResponseEntity.ok("Mechanic with id"+id+ " has been deleted successful.");
     }
 }
