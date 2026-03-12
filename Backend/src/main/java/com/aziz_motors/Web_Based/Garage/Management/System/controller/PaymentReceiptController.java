@@ -2,6 +2,8 @@ package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.PaymentType;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptUpdateRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.PaymentReceiptService;
@@ -26,8 +28,14 @@ public class PaymentReceiptController {
     }
 
     @PostMapping("/add/{dealerId}")
-    public ResponseEntity<UUID> addPaymentReceipt(@PathVariable UUID dealerId, @RequestBody PaymentReceiptRequestDto dto){
-        return ResponseEntity.ok(paymentReceiptService.addPaymentReceipt(dealerId, dto));
+    public ResponseEntity<GeneralMessageResponse> addPaymentReceipt(@PathVariable UUID dealerId, @RequestBody PaymentReceiptRequestDto dto){
+        UUID id = paymentReceiptService.addPaymentReceipt(dealerId, dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Payment Receipt with id-"+id+" has been added successful."
+                )
+        );
     }
 
     @GetMapping("/{receiptId}")
@@ -63,13 +71,27 @@ public class PaymentReceiptController {
                 paymentType));
     }
 
-    public void updatePaymentReceipt(){
+
+    @PutMapping
+    public ResponseEntity<GeneralMessageResponse> updatePaymentReceipt(@RequestBody PaymentReceiptUpdateRequestDto dto){
+        paymentReceiptService.updatedPaymentReceipt(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Payment Receipt with id-"+dto.getId()+" has been updated successful."
+                )
+        );
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePaymentReceipt(@PathVariable UUID id){
+    public ResponseEntity<GeneralMessageResponse> deletePaymentReceipt(@PathVariable UUID id){
         paymentReceiptService.deleteReceipt(id);
-        return ResponseEntity.ok("Payment Receipt with id"+id+ " has been deleted successful.");
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Payment Receipt with id-"+id+" has been deleted successful."
+                )
+        );
     }
 }

@@ -6,6 +6,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.enums.PaymentType;
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.PaymentReceiptRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaymentReceiptResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,14 @@ public class PaymentReceiptService {
         return paymentReceiptRepository.save(paymentReceipt).getId();
     }
 
+    @Transactional
+    public void updatedPaymentReceipt(PaymentReceiptUpdateRequestDto dto){
+        PaymentReceipt receipt = getPaymentReceiptById(dto.getId());
+        fromDto(receipt, dto);
+
+        paymentReceiptRepository.save(receipt);
+    }
+
     private PaymentReceipt fromDto(PaymentReceiptRequestDto dto){
         PaymentReceipt paymentReceipt = new PaymentReceipt();
 
@@ -62,6 +71,18 @@ public class PaymentReceiptService {
         paymentReceipt.setPayerName(dto.getPayerName());
 
         return paymentReceipt;
+    }
+
+    private void fromDto(PaymentReceipt paymentReceipt,PaymentReceiptUpdateRequestDto dto){
+
+        paymentReceipt.setReceiptNumber(dto.getReceiptNumber());
+        paymentReceipt.setPaymentType(dto.getPaymentType());
+        paymentReceipt.setPaymentDate(dto.getPaymentDate());
+        paymentReceipt.setAmount(dto.getAmount());
+        paymentReceipt.setAmountInWords(dto.getAmountInWords());
+        paymentReceipt.setPayeeName(dto.getPayeeName());
+        paymentReceipt.setPayerName(dto.getPayerName());
+
     }
 
 
