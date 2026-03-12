@@ -8,6 +8,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.CustomerWith
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.CustomerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,7 @@ public class CustomerService {
     }
 
 
+    @Transactional
     public UUID addCustomer(CustomerRequestDto dto){
         if(customerRepository.findByEmail(dto.getEmail()).isPresent()){
             throw new CustomerWithEmailAlreadyRegisteredException(
@@ -50,12 +52,11 @@ public class CustomerService {
     }
 
     @Transactional
-    public UUID updateCustomer(UUID customerId, CustomerRequestDto dto){
-        Customer customer = getCustomerById(customerId);
-        fromDto(customer, dto);
+    public void updateCustomer(CustomerUpdateRequestDto dto){
+        Customer customer = getCustomerById(dto.getId());
+        fromCustomerUpdateDto(customer, dto);
 
-        return customerRepository.save(customer).getId();
-
+        customerRepository.save(customer);
     }
 
 
@@ -173,13 +174,12 @@ public class CustomerService {
         return customer;
     }
 
-    private Customer fromDto(Customer customer, CustomerRequestDto dto) {
+    private void fromCustomerUpdateDto(Customer customer, CustomerUpdateRequestDto dto) {
 
         customer.setName(dto.getName());
         customer.setEmail(dto.getEmail());
         customer.setMobileNumber(dto.getMobileNumber());
         customer.setAddress(dto.getAddress());
-        return customer;
     }
 }
 

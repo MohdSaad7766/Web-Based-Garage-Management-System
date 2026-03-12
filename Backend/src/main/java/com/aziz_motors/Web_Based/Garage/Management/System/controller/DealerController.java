@@ -1,7 +1,9 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.DealerRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.DealerUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.DealerResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.DealerService;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +22,14 @@ public class DealerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UUID> addDealer(@RequestBody DealerRequestDto dto){
-        return ResponseEntity.ok(dealerService.addDealer(dto));
+    public ResponseEntity<GeneralMessageResponse> addDealer(@RequestBody DealerRequestDto dto){
+        UUID id = dealerService.addDealer(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Dealer with id-"+id+" has been added successful."
+                )
+        );
     }
 
     @GetMapping("/{id}")
@@ -72,13 +80,25 @@ public class DealerController {
         ));
     }
 
-    public void updateDealer(){
-
+    @PutMapping
+    public ResponseEntity<GeneralMessageResponse> updateDealer(@RequestBody DealerUpdateRequestDto dto){
+        dealerService.updateDealer(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Dealer with id-"+dto.getId()+" has been updated successful."
+                )
+        );
     }
 
-    @DeleteMapping("/id")
-    public ResponseEntity<String> deleteDealer(@PathVariable UUID id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GeneralMessageResponse> deleteDealer(@PathVariable UUID id){
         dealerService.deleteDealer(id);
-        return ResponseEntity.ok("Dealer with id-"+id+" has been deleted successful.");
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Dealer with id-"+id+" has been deleted successful."
+                )
+        );
     }
 }

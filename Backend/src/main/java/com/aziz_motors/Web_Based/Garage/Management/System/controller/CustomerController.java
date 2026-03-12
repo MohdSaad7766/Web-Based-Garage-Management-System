@@ -1,6 +1,7 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.FullCustomerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
@@ -56,13 +57,13 @@ public class CustomerController {
         ));
     }
 
-    @PutMapping("/update/{customerId}")
-    public ResponseEntity<GeneralMessageResponse> updateCustomer(@PathVariable UUID customerId, @RequestBody CustomerRequestDto dto){
-        customerService.updateCustomer(customerId, dto);
+    @PutMapping
+    public ResponseEntity<GeneralMessageResponse> updateCustomer(@RequestBody CustomerUpdateRequestDto dto){
+        customerService.updateCustomer(dto);
         return ResponseEntity.ok(
                 new GeneralMessageResponse(
                 true,
-                "Customer with id-"+customerId+" has been updated successful."
+                "Customer with id-"+dto.getId()+" has been updated successful."
                 )
         );
 

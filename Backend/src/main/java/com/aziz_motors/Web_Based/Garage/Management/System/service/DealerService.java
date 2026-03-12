@@ -6,6 +6,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.DealerAlread
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.DealerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.DealerRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.DealerUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.PaymentReceiptRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.DealerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
@@ -42,6 +43,14 @@ public class DealerService {
         return dealerRepository.save(dealer).getId();
     }
 
+    @Transactional
+    public void updateDealer(DealerUpdateRequestDto dto){
+        Dealer dealer = getDealerById(dto.getId());
+        fromDealerUpdateDto(dealer, dto);
+
+        dealerRepository.save(dealer);
+    }
+
 
     public DealerResponseDto getDealerResponseById(UUID id){
         Dealer dealer = dealerRepository.findById(id).orElseThrow(()->
@@ -61,6 +70,8 @@ public class DealerService {
         Dealer dealer = getDealerById(id);
         dealerRepository.delete(dealer);
     }
+
+
 
 
     public PaginatedResponse<DealerResponseDto> getDealers(
@@ -194,6 +205,31 @@ public class DealerService {
         dealer.setPaymentReceipts(fromDto(dto.getPaymentReceipts(), dealer));
 
         return dealer;
+    }
+
+    private void fromDealerUpdateDto(Dealer dealer, DealerUpdateRequestDto dto){
+
+        dealer.setName(dto.getName());
+        dealer.setEmail(dto.getEmail());
+        dealer.setWebsite(dto.getWebsite());
+        dealer.setGstNumber(dto.getGstNumber());
+        dealer.setPhoneNumber(dto.getPhoneNumber());
+        dealer.setPanNumber(dto.getPanNumber());
+
+        dealer.setContactPersonName(dto.getContactPersonName());
+        dealer.setContactPersonEmail(dto.getContactPersonEmail());
+        dealer.setContactPersonPhone(dto.getContactPersonPhone());
+
+        dealer.setAddress(dto.getAddress());
+        dealer.setCity(dto.getCity());
+        dealer.setState(dto.getState());
+        dealer.setCountry(dto.getCountry());
+        dealer.setZipcode(dto.getZipcode());
+
+        dealer.setBankName(dto.getBankName());
+        dealer.setBankIFSC(dto.getBankIFSC());
+        dealer.setBankAccountNumber(dto.getBankAccountNumber());
+
     }
 
     private List<PaymentReceipt> fromDto(List<PaymentReceiptRequestDto> dtos, Dealer dealer){
