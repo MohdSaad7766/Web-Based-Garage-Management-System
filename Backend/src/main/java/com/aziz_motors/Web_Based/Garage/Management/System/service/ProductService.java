@@ -6,6 +6,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.ProductAlrea
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.ProductRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,14 @@ public class ProductService {
 
         Product product = fromDto(dto);
         return productRepository.save(product).getId();
+    }
+
+    @Transactional
+    public void updateProduct(ProductUpdateRequestDto dto){
+        Product product = getProductById(dto.getId());
+        fromDto(product, dto);
+
+        productRepository.save(product);
     }
 
     public ProductResponseDto getProductResponseById(UUID id){
@@ -130,6 +139,20 @@ public class ProductService {
         product.setTaxPercentage(dto.getTaxPercentage());
 
         return product;
+
+    }
+
+    private void fromDto(Product product, ProductUpdateRequestDto dto){
+
+        product.setName(dto.getName());
+        product.setManufacturer(dto.getManufacturer());
+        product.setActive(dto.isActive());
+        product.setType(dto.getType());
+        product.setUnit(dto.getUnit());
+        product.setBasePrice(dto.getBasePrice());
+        product.setHsnCode(dto.getHsnCode());
+        product.setPartNumber(dto.getPartNumber());
+        product.setTaxPercentage(dto.getTaxPercentage());
 
     }
 }

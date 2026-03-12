@@ -1,7 +1,10 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.entity.Product;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.ProductType;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.ProductUpdateRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.ProductResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.ProductService;
@@ -26,8 +29,14 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UUID> addProduct(@RequestBody ProductRequestDto dto){
-        return ResponseEntity.ok(productService.addProduct(dto));
+    public ResponseEntity<GeneralMessageResponse> addProduct(@RequestBody ProductRequestDto dto){
+       UUID id = productService.addProduct(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Product with id-"+id+" has been updated successful."
+                )
+        );
     }
 
     @PostMapping("/add-all")
@@ -75,13 +84,26 @@ public class ProductController {
         ));
     }
 
-    public void updateProduct(){
+    @PutMapping
+    public ResponseEntity<GeneralMessageResponse> updateProduct(@RequestBody ProductUpdateRequestDto dto){
+        productService.updateProduct(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Product with id-"+dto.getId()+" has been updated successful."
+                )
+        );
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable UUID id){
+    public ResponseEntity<GeneralMessageResponse> deleteProduct(@PathVariable UUID id){
         productService.deleteProduct(id);
-        return ResponseEntity.ok("Product with id"+id+ " has been deleted successful.");
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Product with id-"+id+" has been deleted successful."
+                )
+        );
     }
 }
