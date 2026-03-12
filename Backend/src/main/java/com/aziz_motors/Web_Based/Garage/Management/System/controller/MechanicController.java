@@ -1,6 +1,8 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.MechanicRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.MechanicUpdateRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.MechanicResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.MechanicService;
@@ -19,9 +21,16 @@ public class MechanicController {
     MechanicController(MechanicService mechanicService){
         this.mechanicService = mechanicService;
     }
+
     @PostMapping("/add")
-    public ResponseEntity<UUID> addMechanic(@RequestBody MechanicRequestDto dto){
-        return ResponseEntity.ok(mechanicService.addMechanic(dto));
+    public ResponseEntity<GeneralMessageResponse> addMechanic(@RequestBody MechanicRequestDto dto){
+        UUID id = mechanicService.addMechanic(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Mechanic with id-"+id+" has been added successful."
+                )
+        );
     }
 
     @GetMapping("/{id}")
@@ -52,13 +61,25 @@ public class MechanicController {
         ));
     }
 
-    public void updateMechanic(){
-
+    @PutMapping
+    public ResponseEntity<GeneralMessageResponse> updateMechanic(@RequestBody MechanicUpdateRequestDto dto){
+        mechanicService.updateMechanic(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Mechanic with id-"+dto.getId()+" has been updated successful."
+                )
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMechanic(@PathVariable UUID id){
+    public ResponseEntity<GeneralMessageResponse> deleteMechanic(@PathVariable UUID id){
         mechanicService.deleteMechanic(id);
-        return ResponseEntity.ok("Mechanic with id"+id+ " has been deleted successful.");
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Mechanic with id-"+id+" has been deleted successful."
+                )
+        );
     }
 }

@@ -3,6 +3,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.EstimateStatus;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.EstimateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.EstimateResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.EstimateService;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,14 @@ public class EstimateController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UUID> addEstimate(@RequestBody EstimateRequestDto dto){
-        return ResponseEntity.ok(estimateService.addEstimate(dto));
+    public ResponseEntity<GeneralMessageResponse> addEstimate(@RequestBody EstimateRequestDto dto){
+        UUID estimateId = estimateService.addEstimate(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Estimate with id-"+estimateId+" has been added successful."
+                )
+        );
     }
 
     @GetMapping("/{estimateId}")
@@ -63,19 +70,36 @@ public class EstimateController {
     }
 
     @PatchMapping("/update-status/{estimateId}")
-    public ResponseEntity<UUID> updateEstimateStatus(@PathVariable UUID estimateId, @RequestParam EstimateStatus status){
-        return ResponseEntity.ok(estimateService.updateEstimateStatus(estimateId, status));
+    public ResponseEntity<GeneralMessageResponse> updateEstimateStatus(@PathVariable UUID estimateId, @RequestParam EstimateStatus status){
+        estimateService.updateEstimateStatus(estimateId, status);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Estimate with id-"+estimateId+" has been updated successful."
+                )
+        );
     }
 
-    @PutMapping("/update/{estimateId}")
-    public ResponseEntity<UUID> updateEstimate(@PathVariable UUID estimateId, @RequestBody EstimateRequestDto dto){
-        return ResponseEntity.ok(estimateService.updateEstimate(estimateId, dto));
+    @PutMapping("/{estimateId}")
+    public ResponseEntity<GeneralMessageResponse> updateEstimate(@PathVariable UUID estimateId, @RequestBody EstimateRequestDto dto){
+        estimateService.updateEstimate(estimateId, dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Estimate with id-"+estimateId+" has been updated successful."
+                )
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEstimate(@PathVariable UUID id){
+    public ResponseEntity<GeneralMessageResponse> deleteEstimate(@PathVariable UUID id){
         estimateService.deleteEstimateById(id);
-        return ResponseEntity.ok("Estimate with id"+id+ " has been deleted successful.");
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Estimate with id-"+id+" has been deleted successful."
+                )
+        );
     }
 
     public void convertEstimateToInvoice(){

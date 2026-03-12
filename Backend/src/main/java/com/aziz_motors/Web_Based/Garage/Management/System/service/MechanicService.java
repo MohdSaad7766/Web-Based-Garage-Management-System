@@ -5,6 +5,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.MechanicWith
 import com.aziz_motors.Web_Based.Garage.Management.System.exception.ResourceWithProvidedIdNotFoundException;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.MechanicRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.MechanicRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.MechanicUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.MechanicResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ public class MechanicService {
         this.mechanicRepository = mechanicRepository;
     }
 
+    @Transactional
     public UUID addMechanic(MechanicRequestDto dto){
         if(mechanicRepository.findByEmail(dto.getEmail()).isPresent()){
             throw new MechanicWithEmailAlreadyRegisteredException();
@@ -36,6 +38,13 @@ public class MechanicService {
         Mechanic mechanic = fromDto(dto);
 
         return mechanicRepository.save(mechanic).getId();
+    }
+
+    @Transactional
+    public void updateMechanic(MechanicUpdateRequestDto dto){
+        Mechanic mechanic = getMechanicById(dto.getId());
+        fromUpdateMechanicDto(mechanic, dto);
+        mechanicRepository.save(mechanic);
     }
 
     public MechanicResponseDto getMechanicResponseById(UUID id){
@@ -51,6 +60,7 @@ public class MechanicService {
                 new ResourceWithProvidedIdNotFoundException("Mechanic with id-"+id+" not found..."));
 
     }
+
 
 
     public PaginatedResponse<MechanicResponseDto> getMechanics(
@@ -117,5 +127,15 @@ public class MechanicService {
 
 
         return mechanic;
+    }
+
+    private void fromUpdateMechanicDto(Mechanic mechanic, MechanicUpdateRequestDto dto){
+
+        mechanic.setName(dto.getName());
+        mechanic.setEmail(dto.getEmail());
+        mechanic.setAddress(dto.getAddress());
+        mechanic.setMobileNumber(dto.getMobileNumber());
+        mechanic.setSalary(dto.getSalary());
+        mechanic.setJoinDate(dto.getJoinDate());
     }
 }
