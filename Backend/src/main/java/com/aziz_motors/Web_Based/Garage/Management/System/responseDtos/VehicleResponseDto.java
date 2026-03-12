@@ -28,6 +28,8 @@ public class VehicleResponseDto {
 
     private FuelType fuelType;
 
+    private UUID customerId;
+
     public VehicleResponseDto(Vehicle vehicle){
         this.setVehicleId(vehicle.getId());
         this.setManufacturerName(vehicle.getManufacturerName());
@@ -35,5 +37,6 @@ public class VehicleResponseDto {
         this.setModelYear(vehicle.getModelYear());
         this.setRegistrationNumber(vehicle.getRegistrationNumber());
         this.setFuelType(vehicle.getFuelType());
+        this.setCustomerId(vehicle.getCustomer().getId());
     }
 }

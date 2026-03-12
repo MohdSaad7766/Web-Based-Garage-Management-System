@@ -80,7 +80,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(UUID id){
+    public ResponseEntity<String> deleteProduct(@PathVariable UUID id){
         productService.deleteProduct(id);
         return ResponseEntity.ok("Product with id"+id+ " has been deleted successful.");
     }

@@ -41,7 +41,8 @@ public interface EstimateRepository extends JpaRepository<Estimate, UUID> {
                 v.modelName,
                 v.modelYear,
                 v.registrationNumber,
-                v.fuelType
+                v.fuelType,
+                c.id
             ),
             null
         )
@@ -86,7 +87,8 @@ public interface EstimateRepository extends JpaRepository<Estimate, UUID> {
                 v.modelName,
                 v.modelYear,
                 v.registrationNumber,
-                v.fuelType
+                v.fuelType,
+                c.id
             ),
             null
         )

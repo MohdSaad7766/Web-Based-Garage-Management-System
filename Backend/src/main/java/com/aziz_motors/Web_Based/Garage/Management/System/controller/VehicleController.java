@@ -1,7 +1,11 @@
 package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 
+import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
+import com.aziz_motors.Web_Based.Garage.Management.System.enums.FuelType;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +31,37 @@ public class VehicleController {
         return ResponseEntity.ok(new GeneralMessageResponse(true,"Vehicle Added Successfully..."));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<VehicleResponseDto> getVehicleById(@PathVariable UUID id){
+        return ResponseEntity.ok(vehicleService.getVehicleResponseById(id));
+    }
+
+
+    @GetMapping("/get-all/{pageNo}")
+    public ResponseEntity<PaginatedResponse<VehicleResponseDto>> getVehicles(
+            @PathVariable int pageNo,
+            @RequestParam(required = false) String manufacturerName,
+            @RequestParam(required = false) String modelName,
+            @RequestParam(required = false) Integer modelYear,
+            @RequestParam(required = false) String registrationNumber,
+            @RequestParam(required = false) FuelType fuelType,
+            @RequestParam(required = false) UUID customerId
+    ){
+        return ResponseEntity.ok(vehicleService.getVehicles(
+                pageNo,
+                manufacturerName,
+                modelName,
+                modelYear,
+                registrationNumber,
+                fuelType,
+                customerId
+        ));
+    }
+
+
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteVehicle(UUID id){
+    public ResponseEntity<String> deleteVehicle(@PathVariable UUID id){
         vehicleService.deleteVehicle(id);
         return ResponseEntity.ok("Vehicle with id"+id+ " has been deleted successful.");
     }

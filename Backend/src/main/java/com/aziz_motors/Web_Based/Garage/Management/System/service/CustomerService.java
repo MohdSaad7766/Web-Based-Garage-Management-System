@@ -130,6 +130,7 @@ public class CustomerService {
         dto.setManufacturerName(vehicle.getManufacturerName());
         dto.setModelName(vehicle.getModelName());
         dto.setModelYear(vehicle.getModelYear());
+        dto.setCustomerId(vehicle.getCustomer().getId());
 
         return dto;
     }

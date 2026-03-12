@@ -68,7 +68,7 @@ public class PaymentReceiptController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePaymentReceipt(UUID id){
+    public ResponseEntity<String> deletePaymentReceipt(@PathVariable UUID id){
         paymentReceiptService.deleteReceipt(id);
         return ResponseEntity.ok("Payment Receipt with id"+id+ " has been deleted successful.");
     }
