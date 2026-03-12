@@ -8,6 +8,7 @@ import com.aziz_motors.Web_Based.Garage.Management.System.exception.VehicleAlrea
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.CustomerRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.repository.VehicleRepository;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +64,14 @@ public class VehicleService {
 
 
         customerRepository.save(customer);
+    }
+
+    @Transactional
+    public void updateVehicle(VehicleUpdateRequestDto dto){
+        Vehicle vehicle = getVehicleById(dto.getId());
+        fromDto(vehicle, dto);
+
+        vehicleRepository.save(vehicle);
     }
 
     public Vehicle getVehicleById(UUID id){
@@ -127,6 +136,16 @@ public class VehicleService {
         return vehicle;
     }
 
+    private void fromDto(Vehicle vehicle,VehicleUpdateRequestDto dto) {
+
+        vehicle.setManufacturerName(dto.getManufacturerName());
+        vehicle.setModelName(dto.getModelName());
+        vehicle.setModelYear(dto.getModelYear());
+        vehicle.setFuelType(dto.getFuelType());
+        vehicle.setRegistrationNumber(dto.getRegistrationNumber());
+
+    }
+
     private VehicleResponseDto toDto(Vehicle vehicle){
         VehicleResponseDto dto = new VehicleResponseDto();
 
@@ -140,5 +159,7 @@ public class VehicleService {
 
         return dto;
     }
+
+
 }
 

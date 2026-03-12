@@ -3,6 +3,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 import com.aziz_motors.Web_Based.Garage.Management.System.entity.Vehicle;
 import com.aziz_motors.Web_Based.Garage.Management.System.enums.FuelType;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleRequestDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.VehicleUpdateRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.VehicleResponseDto;
@@ -28,7 +29,11 @@ public class VehicleController {
     public ResponseEntity<GeneralMessageResponse> addVehicle(@RequestParam UUID customerId, @RequestBody VehicleRequestDto dto){
         vehicleService.addVehicle(customerId, dto);
 
-        return ResponseEntity.ok(new GeneralMessageResponse(true,"Vehicle Added Successfully..."));
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Vehicle Added Successfully...")
+        );
     }
 
     @GetMapping("/{id}")
@@ -60,9 +65,25 @@ public class VehicleController {
 
 
 
+    @PutMapping
+    public ResponseEntity<GeneralMessageResponse> updateVehicle(@RequestBody VehicleUpdateRequestDto dto){
+        vehicleService.updateVehicle(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Vehicle with id-"+dto.getId()+" has been deleted successful."
+                )
+        );
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteVehicle(@PathVariable UUID id){
+    public ResponseEntity<GeneralMessageResponse> deleteVehicle(@PathVariable UUID id){
         vehicleService.deleteVehicle(id);
-        return ResponseEntity.ok("Vehicle with id"+id+ " has been deleted successful.");
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Vehicle with id-"+id+" has been deleted successful."
+                )
+        );
     }
 }
