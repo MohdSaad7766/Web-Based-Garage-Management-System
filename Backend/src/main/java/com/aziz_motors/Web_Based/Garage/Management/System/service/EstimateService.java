@@ -141,7 +141,7 @@ public class EstimateService {
     @Transactional
     public UUID updateEstimate(UUID estimateId, EstimateRequestDto dto){
         Estimate estimate = getEstimateById(estimateId);
-        fromDto(dto, estimate);
+        fromDto(estimate, dto);
 
         return estimateRepository.save(estimate).getId();
     }
@@ -155,7 +155,7 @@ public class EstimateService {
         estimateRepository.delete(estimate);
     }
 
-    private void fromDto(EstimateRequestDto dto, Estimate estimate){
+    private void fromDto( Estimate estimate, EstimateRequestDto dto){
 
         List<EstimateItem> newItems = fromDto(dto.getEstimateItems());
 

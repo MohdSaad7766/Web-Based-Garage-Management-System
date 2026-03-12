@@ -49,6 +49,14 @@ public class CustomerService {
         return customerRepository.save(customer).getId();
     }
 
+    @Transactional
+    public UUID updateCustomer(UUID customerId, CustomerRequestDto dto){
+        Customer customer = getCustomerById(customerId);
+        fromDto(customer, dto);
+
+        return customerRepository.save(customer).getId();
+
+    }
 
 
     public FullCustomerResponseDto getCustomerResponseById(UUID customerId){
@@ -158,6 +166,15 @@ public class CustomerService {
 
     private Customer fromDto(CustomerRequestDto dto) {
         Customer customer = new Customer();
+        customer.setName(dto.getName());
+        customer.setEmail(dto.getEmail());
+        customer.setMobileNumber(dto.getMobileNumber());
+        customer.setAddress(dto.getAddress());
+        return customer;
+    }
+
+    private Customer fromDto(Customer customer, CustomerRequestDto dto) {
+
         customer.setName(dto.getName());
         customer.setEmail(dto.getEmail());
         customer.setMobileNumber(dto.getMobileNumber());

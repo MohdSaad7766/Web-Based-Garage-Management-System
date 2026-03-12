@@ -3,6 +3,7 @@ package com.aziz_motors.Web_Based.Garage.Management.System.controller;
 import com.aziz_motors.Web_Based.Garage.Management.System.requestDtos.CustomerRequestDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.CustomerResponseDto;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.FullCustomerResponseDto;
+import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.GeneralMessageResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.responseDtos.PaginatedResponse;
 import com.aziz_motors.Web_Based.Garage.Management.System.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,14 @@ public class CustomerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UUID> addCustomer(@RequestBody CustomerRequestDto dto){
-        return ResponseEntity.ok(customerService.addCustomer(dto));
+    public ResponseEntity<GeneralMessageResponse> addCustomer(@RequestBody CustomerRequestDto dto){
+        UUID customerId = customerService.addCustomer(dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                        true,
+                        "Customer with id-"+customerId+" has been added successful."
+                )
+        );
     }
 
     @GetMapping("/{id}")
@@ -49,14 +56,27 @@ public class CustomerController {
         ));
     }
 
-    public void updateCustomer(){
+    @PutMapping("/update/{customerId}")
+    public ResponseEntity<GeneralMessageResponse> updateCustomer(@PathVariable UUID customerId, @RequestBody CustomerRequestDto dto){
+        customerService.updateCustomer(customerId, dto);
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                true,
+                "Customer with id-"+customerId+" has been updated successful."
+                )
+        );
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCustomerById(@PathVariable UUID id){
+    public ResponseEntity<GeneralMessageResponse> deleteCustomerById(@PathVariable UUID id){
         customerService.deleteCustomer(id);
-        return ResponseEntity.ok("Customer with id-"+id+" has been deleted successful.");
+        return ResponseEntity.ok(
+                new GeneralMessageResponse(
+                true,
+                "Customer with id-"+id+" has been deleted successful."
+            )
+        );
     }
 
 
